@@ -35,8 +35,8 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
-
 # Folder structure
+
 ```bash
 /.storybook                      # Storybook configuration
 /.yarn                           # Yarn version manager
@@ -45,8 +45,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 ├── /app                         # Main src folder/
 ├── /hooks                       # Dev's custom hooks
 └── /libs/
-    ├── /query                   # React query collections 
-    │   └── <Collection name>.ts 
+    ├── /query                   # React query collections
+    │   └── <Collection name>.ts
     └── /ui                      # Styles and components/
         └── /components          # Code for <Component>.tsx
 .env                             # Environment variables
