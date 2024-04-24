@@ -147,7 +147,7 @@ let theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          borderRadius: '.5rem !important',
+          borderRadius: '4rem !important',
           fontSize: '14px',
           height: '40px',
           '& .MuiOutlinedInput-input': {

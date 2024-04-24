@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "pickup": "1234 Main St, Anytown, USA",
+    "destination": "5678 Elm St, Othertown, USA",
+    "datetime": "2020-01-01T12:00:00",
+    "price": 20000
+  },
+  {
+    "id": 2,
+    "pickup": "1234 Main St, Anytown, USA",
+    "destination": "5678 Elm St, Othertown, USA",
+    "datetime": "2020-01-01T12:00:00",
+    "price": 20000
+  },
+  {
+    "id": 3,
+    "pickup": "1234 Main St, Anytown, USA",
+    "destination": "5678 Elm St, Othertown, USA",
+    "datetime": "2020-01-01T12:00:00",
+    "price": 20000
+  }
+]

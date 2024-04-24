@@ -3,9 +3,7 @@ import React from 'react';
 import Link from 'next/link';
 
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 
 const Main = styled('main')(({ theme }) => ({
   padding: '1rem',
@@ -36,26 +34,12 @@ const Main = styled('main')(({ theme }) => ({
 export default function Home() {
   return (
     <Main>
-      <Stack spacing={1}>
-        <Typography variant='h5' fontWeight='600'>
-          Lần đầu bạn đến đây?
-        </Typography>
-        <Typography>
-          Đăng ký để trải nghiệm nhiều điều thú vị hơn với <b>Gruber</b>
-        </Typography>
-      </Stack>
-      <Stack direction='column' spacing={2}>
-        <Link href='/log-in'>
-          <Button size='large' sx={{ width: '100%' }}>
-            Đăng Nhập
-          </Button>
-        </Link>
-        <Link href='/sign-up'>
-          <Button size='large' variant='secondary' sx={{ width: '100%' }}>
-            Đăng Ký
-          </Button>
-        </Link>
-      </Stack>
+      <Link href='/welcome'>
+        <Button sx={{ width: '100%' }}>Đăng ký, đăng nhập</Button>
+      </Link>
+      <Link href='/home'>
+        <Button sx={{ width: '100%' }}>Đặt xe</Button>
+      </Link>
     </Main>
   );
 }
