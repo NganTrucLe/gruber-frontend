@@ -30,7 +30,7 @@ import { useCurrentLocation } from '@/hooks';
 import { PlaceAutocomplete } from '@/libs/ui';
 import { calculateDistance } from '@/libs/utils';
 
-const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY || '';
+const GOOGLE_MAPS_API_KEY = 'AIzaSyAe_FAtgZw3zJZN9RySh-4WMVHzXruyuaA';
 const GOOGLE_MAPS_ID = 'adf136d39bc00bf9';
 
 const Main = styled('main')({
