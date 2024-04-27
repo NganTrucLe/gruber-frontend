@@ -2,16 +2,14 @@
 import React, { useState } from 'react';
 import { AdvancedMarker, APIProvider, Map, useMap } from '@vis.gl/react-google-maps';
 
-import {
-  Dialog,
-  DialogTitle,
-  Divider,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
 import Paper from '@mui/material/Paper';
@@ -30,8 +28,8 @@ import { useCurrentLocation } from '@/hooks';
 import { PlaceAutocomplete } from '@/libs/ui';
 import { calculateDistance } from '@/libs/utils';
 
-const GOOGLE_MAPS_API_KEY = 'AIzaSyAe_FAtgZw3zJZN9RySh-4WMVHzXruyuaA';
-const GOOGLE_MAPS_ID = 'adf136d39bc00bf9';
+const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_NAME_GOOGLE_MAPS_API_KEY;
+const GOOGLE_MAPS_ID = process.env.NEXT_PUBLIC_NAME_GOOGLE_MAPS_ID;
 
 const Main = styled('main')({
   width: '100vw',

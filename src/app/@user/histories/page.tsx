@@ -12,6 +12,7 @@ import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import histories from '@/libs/mocks/histories.json';
+import { price } from '@/libs/utils';
 
 const Main = styled('main')(({ theme }) => ({
   padding: theme.spacing(2),
@@ -32,7 +33,7 @@ export default function HistoryPage() {
       <List>
         {histories.map((history) => (
           <ListItem key={history.id} disablePadding divider>
-            <ListItemButton sx={{ px: 0 }} component={Link} href={`/history/${history.id}`}>
+            <ListItemButton sx={{ px: 0 }} component={Link} href={`/histories/${history.id}`}>
               <ListItemAvatar>
                 <Avatar />
               </ListItemAvatar>
@@ -43,7 +44,7 @@ export default function HistoryPage() {
                   <Typography variant='caption'>{format(new Date(history.datetime), 'dd/MM/yyyy - HH:mm')}</Typography>
                 }
               />
-              <ListItemText primary={history.price} sx={{ textAlign: 'right' }} />
+              <ListItemText primary={price(history.price)} sx={{ textAlign: 'right' }} />
             </ListItemButton>
           </ListItem>
         ))}

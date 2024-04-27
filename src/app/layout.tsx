@@ -15,9 +15,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  user,
+  driver,
+  admin,
+  staff,
 }: Readonly<{
   children: ReactNode;
+  user: ReactNode;
+  driver: ReactNode;
+  admin: ReactNode;
+  staff: ReactNode;
 }>) {
+  const role = 'driver';
   return (
     <html lang='en'>
       <body>
@@ -26,6 +35,7 @@ export default function RootLayout({
             <ThemeProvider theme={theme}>
               <CssBaseline />
               {children}
+              {role === 'user' ? user : role === 'driver' ? driver : role === 'admin' ? admin : staff}
             </ThemeProvider>
           </AppRouterCacheProvider>
         </ReactQueryProvider>

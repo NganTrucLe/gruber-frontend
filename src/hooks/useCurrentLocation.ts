@@ -27,7 +27,8 @@ export default function useCurrentLocation() {
 
   React.useEffect(() => {
     if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(
+
+    const watchId = navigator.geolocation.watchPosition(
       (position) => {
         setPosition({
           lat: position.coords.latitude,
@@ -45,6 +46,12 @@ export default function useCurrentLocation() {
         maximumAge: 0,
       }
     );
+
+    return () => {
+      // Stop watching the position when the component unmounts
+      navigator.geolocation.clearWatch(watchId);
+    };
   }, []);
+
   return position;
 }

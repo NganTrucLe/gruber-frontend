@@ -12,3 +12,7 @@ export function hiddenEmail(email: string) {
   }
   return `${hiddenUsername}@${domain}`;
 }
+
+export function price(price: number) {
+  return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+}
