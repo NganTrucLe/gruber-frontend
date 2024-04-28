@@ -5,3 +5,5 @@ export * from './InputLayout';
 export * from './LoadingButton';
 export * from './OTPInput';
 export * from './PlaceAutocomplete';
+export * from './styles';
+export * from './TopAppBar';

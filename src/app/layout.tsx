@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   description: 'Grab and Uber in one place',
 };
 
+type Role = 'user' | 'driver' | 'admin' | 'staff';
 export default function RootLayout({
   children,
   user,
@@ -26,7 +27,24 @@ export default function RootLayout({
   admin: ReactNode;
   staff: ReactNode;
 }>) {
-  const role = 'driver';
+  const role: Role = 'driver';
+
+  let roleComponent;
+
+  switch (role) {
+    case 'user' as Role:
+      roleComponent = user;
+      break;
+    case 'driver' as Role:
+      roleComponent = driver;
+      break;
+    case 'admin' as Role:
+      roleComponent = admin;
+      break;
+    default:
+      roleComponent = staff;
+  }
+
   return (
     <html lang='en'>
       <body>
@@ -34,8 +52,8 @@ export default function RootLayout({
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
               <CssBaseline />
+              {roleComponent}
               {children}
-              {role === 'user' ? user : role === 'driver' ? driver : role === 'admin' ? admin : staff}
             </ThemeProvider>
           </AppRouterCacheProvider>
         </ReactQueryProvider>

@@ -221,6 +221,16 @@ let theme = createTheme({
         },
       },
     },
+    MuiCard: {
+      variants: [
+        {
+          props: { variant: 'outlined' },
+          style: {
+            border: `1px solid ${colors.neutral[100]}`,
+          },
+        },
+      ],
+    },
     MuiChip: {
       variants: [
         {

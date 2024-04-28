@@ -1,31 +1,32 @@
 'use client';
-import { useRouter } from 'next/navigation';
 import React, { ReactNode, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { AdvancedMarker, APIProvider, Map, useMap } from '@vis.gl/react-google-maps';
 
-import Divider from '@mui/material/Divider';
+import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
+import Divider from '@mui/material/Divider';
+import Fab from '@mui/material/Fab';
+import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import Avatar from '@mui/material/Avatar';
-import Chip from '@mui/material/Chip';
-import Fab from '@mui/material/Fab';
-import IconButton from '@mui/material/IconButton';
 
+import CircleIcon from '@mui/icons-material/FiberManualRecordRounded';
+import FlashOffIcon from '@mui/icons-material/FlashOffRounded';
+import FlashIcon from '@mui/icons-material/FlashOnRounded';
 import NearMeRoundedIcon from '@mui/icons-material/NearMeRounded';
 import PowerIcon from '@mui/icons-material/PowerSettingsNewRounded';
-import CircleIcon from '@mui/icons-material/FiberManualRecordRounded';
 import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
+import RefreshIcon from '@mui/icons-material/RefreshRounded';
 import IncomeIcon from '@mui/icons-material/SignalCellularAltRounded';
 import StarIcon from '@mui/icons-material/StarRounded';
-import RefreshIcon from '@mui/icons-material/RefreshRounded';
-import FlashIcon from '@mui/icons-material/FlashOnRounded';
-import FlashOffIcon from '@mui/icons-material/FlashOffRounded';
 
-import { AutoNotiDialog, ManualNotiDialog } from './NotiDialog';
 import { useCurrentLocation } from '@/hooks';
+import IncomeOptions from './IncomeOptions';
+import { AutoNotiDialog, ManualNotiDialog } from './NotiDialog';
 
 const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_NAME_GOOGLE_MAPS_API_KEY;
 const GOOGLE_MAPS_ID = process.env.NEXT_PUBLIC_NAME_GOOGLE_MAPS_ID;
@@ -62,42 +63,6 @@ function MyLocation() {
   );
 }
 
-function TopToolbar() {
-  return (
-    <Stack
-      sx={{
-        position: 'absolute',
-        top: {
-          xs: '1rem',
-          sm: '2rem',
-        },
-        width: {
-          xs: 'calc(100vw - 2rem)',
-          sm: '80%',
-          md: '50%',
-        },
-      }}
-      direction='row'
-      justifyContent='space-between'>
-      <Stack spacing={2}>
-        <Button variant='secondary' startIcon={<IncomeIcon fontSize='small' />}>
-          Thu nhập
-        </Button>
-      </Stack>
-      <Stack alignItems='center'>
-        <Avatar sx={{ marginBottom: '4px' }} />
-        <Chip
-          icon={<StarIcon sx={{ color: 'orange !important' }} />}
-          label='5.00'
-          variant='outlined'
-          size='small'
-          sx={{ color: 'black' }}
-        />
-      </Stack>
-    </Stack>
-  );
-}
-
 function MessageOffline() {
   return (
     <Stack direction='row' alignItems={'center'}>
@@ -130,6 +95,7 @@ export default function HomePage() {
   const [message, setMessage] = useState<ReactNode>(null);
   const [auto, setAuto] = useState(false);
   const [open, setOpen] = useState(true);
+  const [openIncome, setOpenIncome] = useState(false);
   const position = useCurrentLocation();
   const router = useRouter();
 
@@ -188,7 +154,50 @@ export default function HomePage() {
               <MyLocationIcon fontSize='large' sx={{ color: 'blue' }} color='primary' />
             </AdvancedMarker>
           </Map>
-          <TopToolbar />
+          <Stack
+            sx={{
+              position: 'absolute',
+              top: {
+                xs: '1rem',
+                sm: '2rem',
+              },
+              width: {
+                xs: 'calc(100vw - 2rem)',
+                sm: '80%',
+                md: '50%',
+              },
+            }}
+            direction='row'
+            justifyContent={openIncome ? 'flex-end' : 'space-between'}>
+            {openIncome ? null : (
+              <Button
+                variant='secondary'
+                size='large'
+                startIcon={<IncomeIcon fontSize='small' />}
+                onClick={() => setOpenIncome(true)}>
+                Thu nhập
+              </Button>
+            )}
+            <IncomeOptions open={openIncome} onClick={() => setOpenIncome(false)} />
+            <Stack alignItems='center'>
+              <Avatar
+                sx={{
+                  marginBottom: '4px',
+                  '&:hover': {
+                    cursor: 'pointer',
+                  },
+                }}
+                onClick={() => router.push('/profile')}
+              />
+              <Chip
+                icon={<StarIcon sx={{ color: 'orange !important' }} />}
+                label='5.00'
+                variant='outlined'
+                size='small'
+                sx={{ color: 'black' }}
+              />
+            </Stack>
+          </Stack>
           <Stack
             sx={{
               position: 'absolute',

@@ -1,6 +1,6 @@
 'use client';
+import { useEffect, useState } from 'react';
 import { useMap, useMapsLibrary } from '@vis.gl/react-google-maps';
-import { useState, useEffect } from 'react';
 
 import { colors } from '@/libs/ui';
 
