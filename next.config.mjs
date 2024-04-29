@@ -1,4 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'api.vietqr.io',
+        port: '',
+        pathname: '/img/**',
+      },
+    ],
+  },
+};
 
 export default nextConfig;

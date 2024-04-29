@@ -79,6 +79,7 @@ let theme = createTheme({
     MuiButton: {
       defaultProps: {
         variant: 'contained',
+        size: 'large',
       },
       variants: [
         {

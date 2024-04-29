@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 
 import Card from '@mui/material/Card';
@@ -16,12 +17,17 @@ import WalletIcon from '@mui/icons-material/PaymentRounded';
 
 import { Main, TopAppBar } from '@/libs/ui';
 import { price } from '@/libs/utils';
+import BankWalletDialog from './BankWalletDialog';
+import CashWalletDialog from './CashWalletDialog';
 
 export default function WalletPage() {
+  const [dialogBank, setDialogBank] = useState(false);
+  const [dialogCash, setDialogCash] = useState(false);
+
   // TODO: Fetch data from server
   return (
     <Main>
-      <TopAppBar title='Ví' />
+      <TopAppBar title='Ví' backHref='/home' />
       <Stack alignItems={'center'}>
         <Tabs sx={{ mb: 2, width: 'fit-content' }} value={2}>
           <Tab
@@ -36,7 +42,7 @@ export default function WalletPage() {
         </Tabs>
       </Stack>
       <Card variant='outlined' sx={{ mt: 2 }}>
-        <CardActionArea sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <CardActionArea sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => setDialogBank(true)}>
           <CardContent>
             <Typography variant='caption' color='text.secondary'>
               Ví tín dụng
@@ -51,7 +57,7 @@ export default function WalletPage() {
         </CardActionArea>
       </Card>
       <Card variant='outlined' sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-        <CardActionArea sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <CardActionArea sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => setDialogCash(true)}>
           <CardContent>
             <Typography variant='caption' color='text.secondary'>
               Ví tiền mặt
@@ -65,6 +71,8 @@ export default function WalletPage() {
           </CardActions>
         </CardActionArea>
       </Card>
+      <BankWalletDialog open={dialogBank} onClose={() => setDialogBank(false)} />
+      <CashWalletDialog open={dialogCash} onClose={() => setDialogCash(false)} />
     </Main>
   );
 }

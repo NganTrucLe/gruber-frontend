@@ -1,9 +1,15 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
+import { useRecoilState } from 'recoil';
 
 import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
+
+import { roleState } from '@/recoils';
 
 const Main = styled('main')(({ theme }) => ({
   padding: '1rem',
@@ -32,6 +38,8 @@ const Main = styled('main')(({ theme }) => ({
   },
 }));
 export default function Home() {
+  const [role, setRole] = useRecoilState(roleState);
+
   return (
     <Main>
       <Link href='/welcome'>
@@ -40,6 +48,11 @@ export default function Home() {
       <Link href='/home'>
         <Button sx={{ width: '100%' }}>Đặt xe</Button>
       </Link>
+      <Typography>Chọn role để test</Typography>
+      <Select onChange={(e) => setRole(e.target.value)} defaultValue={role}>
+        <MenuItem value='driver'>Tài xế</MenuItem>
+        <MenuItem value='user'>Khách hàng</MenuItem>
+      </Select>
     </Main>
   );
 }

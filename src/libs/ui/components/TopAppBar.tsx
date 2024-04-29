@@ -7,7 +7,7 @@ import { IconButton, Stack, styled, Typography } from '@mui/material';
 import BackIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 
 interface TopAppBarProps {
-  onBackClick?: () => void;
+  backHref?: string;
   title: string | ReactNode;
 }
 
@@ -15,11 +15,11 @@ const Title = styled('div')(() => ({
   marginLeft: '-40px',
 }));
 
-export function TopAppBar({ onBackClick, title }: TopAppBarProps) {
+export function TopAppBar({ backHref, title }: TopAppBarProps) {
   const router = useRouter();
   const handleBackClick = () => {
-    if (onBackClick) {
-      onBackClick();
+    if (backHref) {
+      router.push(backHref);
     } else {
       router.back();
     }

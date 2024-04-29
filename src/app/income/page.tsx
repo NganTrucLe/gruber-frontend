@@ -48,7 +48,7 @@ export default function IncomePage() {
 
   return (
     <Main>
-      <TopAppBar title='Thu nhập' />
+      <TopAppBar title='Thu nhập' backHref='/home' />
       <Stack alignItems={'center'}>
         <Tabs sx={{ mb: 2, width: 'fit-content' }} value={1}>
           <Tab
@@ -89,21 +89,6 @@ export default function IncomePage() {
             </Typography>
             <Typography variant='h5' fontWeight='bold'>
               5 cuốc xe
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <ChevronRightIcon sx={{ mr: 2 }} />
-          </CardActions>
-        </CardActionArea>
-      </Card>
-      <Card variant='outlined' sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-        <CardActionArea sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <CardContent>
-            <Typography variant='caption' color='text.secondary'>
-              Tiền vốn hoạt động
-            </Typography>
-            <Typography variant='h5' fontWeight='bold'>
-              {price(500000)}
             </Typography>
           </CardContent>
           <CardActions>
