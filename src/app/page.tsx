@@ -52,6 +52,7 @@ export default function Home() {
       <Select onChange={(e) => setRole(e.target.value)} defaultValue={role}>
         <MenuItem value='driver'>Tài xế</MenuItem>
         <MenuItem value='user'>Khách hàng</MenuItem>
+        <MenuItem value='staff'>Nhân viên</MenuItem>
       </Select>
     </Main>
   );

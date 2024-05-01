@@ -152,7 +152,7 @@ let theme = createTheme({
           fontSize: '14px',
           height: '40px',
           '& .MuiOutlinedInput-input': {
-            padding: '.5rem .5rem',
+            padding: '.5rem 1rem',
           },
         },
       },

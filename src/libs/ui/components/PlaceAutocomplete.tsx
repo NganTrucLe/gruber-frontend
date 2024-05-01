@@ -19,12 +19,13 @@ const StyledInput = styled(OutlinedInput)(({ theme }) => ({
 }));
 
 interface AutocompleteProps {
+  defaultStyle?: boolean;
   onPlaceSelect: (place: google.maps.places.PlaceResult) => void;
   onClear?: () => void;
   inputProps: OutlinedInputProps;
 }
 
-export function PlaceAutocomplete({ onPlaceSelect, onClear, inputProps }: AutocompleteProps) {
+export function PlaceAutocomplete({ defaultStyle = false, onPlaceSelect, onClear, inputProps }: AutocompleteProps) {
   const [placeAutocomplete, setPlaceAutocomplete] = useState<google.maps.places.Autocomplete | null>(null);
   const [geocoder, setGeocoder] = useState<google.maps.Geocoder | null>(null);
   const [inputValue, setInputValue] = useState(''); // Add this line
@@ -68,21 +69,41 @@ export function PlaceAutocomplete({ onPlaceSelect, onClear, inputProps }: Autoco
     onClear?.();
   };
 
-  return (
-    <StyledInput
-      {...inputProps}
-      value={inputValue} // Make the OutlinedInput controlled
-      onChange={handleChange}
-      inputRef={inputRef}
-      endAdornment={
-        <InputAdornment position='end'>
-          {Boolean(inputValue) ? (
-            <IconButton onClick={handleClear} edge='end' sx={{ color: 'inherit', padding: 1 }}>
-              <ClearIcon fontSize='small' />
-            </IconButton>
-          ) : null}
-        </InputAdornment>
-      }
-    />
-  );
+  if (defaultStyle)
+    return (
+      <OutlinedInput
+        {...inputProps}
+        value={inputValue} // Make the OutlinedInput controlled
+        onChange={handleChange}
+        inputRef={inputRef}
+        endAdornment={
+          <InputAdornment position='end'>
+            {Boolean(inputValue) ? (
+              <IconButton onClick={handleClear} edge='end' sx={{ color: 'inherit', padding: 1 }}>
+                <ClearIcon fontSize='small' />
+              </IconButton>
+            ) : null}
+          </InputAdornment>
+        }
+      />
+    );
+  else {
+    return (
+      <StyledInput
+        {...inputProps}
+        value={inputValue} // Make the OutlinedInput controlled
+        onChange={handleChange}
+        inputRef={inputRef}
+        endAdornment={
+          <InputAdornment position='end'>
+            {Boolean(inputValue) ? (
+              <IconButton onClick={handleClear} edge='end' sx={{ color: 'inherit', padding: 1 }}>
+                <ClearIcon fontSize='small' />
+              </IconButton>
+            ) : null}
+          </InputAdornment>
+        }
+      />
+    );
+  }
 }

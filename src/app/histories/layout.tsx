@@ -11,8 +11,8 @@ export default function HistoriesLayout({
   user,
 }: {
   children: ReactNode;
-  driver?: ReactNode;
-  user?: ReactNode;
+  driver: ReactNode;
+  user: ReactNode;
 }) {
   const [role] = useRecoilState(roleState);
   let roleComponent;

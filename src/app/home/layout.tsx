@@ -12,10 +12,10 @@ export default function HomeLayout({
   user,
 }: {
   children: ReactNode;
-  admin?: ReactNode;
-  driver?: ReactNode;
-  staff?: ReactNode;
-  user?: ReactNode;
+  admin: ReactNode;
+  driver: ReactNode;
+  staff: ReactNode;
+  user: ReactNode;
 }) {
   const [role] = useRecoilState(roleState);
   let roleComponent;
