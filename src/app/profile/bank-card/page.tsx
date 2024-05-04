@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Form, Formik } from 'formik';
@@ -10,6 +11,8 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
 import { InputLayout, Main, TopAppBar } from '@/libs/ui';
+import { useMutation } from '@tanstack/react-query';
+import { addCard, removeCard } from '@/libs/query';
 
 interface BankCard {
   number: string;
@@ -19,6 +22,7 @@ interface BankCard {
 }
 
 export default function BankCardPage() {
+  const router = useRouter();
   const [bank, setBank] = useState(null);
   const cardInfo = {
     number: '**** **** **** 1234',
@@ -43,6 +47,36 @@ export default function BankCardPage() {
         setBank(bank);
       });
   }, []);
+
+  const addCardMutation = useMutation({
+    mutationFn: (data: { userId: string; data: any }) => addCard(data.userId, data.data),
+    onSuccess: () => {
+      router.push('/profile');
+      // show success message
+      alert('Thêm thẻ thành công');
+    },
+    onError: (error) => {
+      // show error message
+      alert('Thêm thẻ thất bại ' + error.message);
+    },
+  });
+
+  const removeCardMutation = useMutation({
+    mutationFn: (userId: string) => removeCard(userId),
+    onSuccess: () => {
+      router.push('/profile');
+      // show success message
+      alert('Hủy thẻ thành công');
+    },
+    onError: (error) => {
+      // show error message
+      alert('Hủy thẻ thất bại ' + error.message);
+    },
+  });
+
+  const handleRemoveCard = () => {
+    removeCardMutation.mutate('1');
+  };
 
   // TODO: fetch from the server to check if there is a card, then render the corresponding part
   return (
@@ -70,7 +104,7 @@ export default function BankCardPage() {
         <Typography variant='body2'>{cardInfo.name}</Typography>
         <Typography variant='body2'>{cardInfo.exp}</Typography>
       </Card>
-      <Button color='error' variant='outlined'>
+      <Button color='error' variant='outlined' onClick={handleRemoveCard}>
         Hủy liên kết
       </Button>
       <Box
@@ -92,9 +126,7 @@ export default function BankCardPage() {
           <Formik
             initialValues={initialValues}
             onSubmit={(values) => {
-              // handle form submission
-              // eslint-disable-next-line no-console
-              console.log('Submit bank card', values);
+              addCardMutation.mutate({ userId: '1', data: values });
             }}>
             <Form>
               <Stack spacing={2}>

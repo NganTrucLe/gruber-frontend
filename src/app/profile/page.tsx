@@ -1,4 +1,6 @@
+'use client';
 import Link from 'next/link';
+import { useRecoilState } from 'recoil';
 
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
@@ -12,11 +14,15 @@ import Typography from '@mui/material/Typography';
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRightRounded';
 
-import { colors, Main } from '@/libs/ui';
+import { roleState } from '@/recoils';
+import { colors, Main, Navigation, TopAppBar } from '@/libs/ui';
 
 export default function ProfilePage() {
+  const [role] = useRecoilState(roleState);
+
   return (
     <Main>
+      {role == 'user' ? <Navigation /> : <TopAppBar title='Tài khoản' backHref='/home' />}
       <Paper
         sx={{ bgcolor: colors.green[800], p: 2, mb: 2, ml: '-1rem', mr: '-1rem' }}
         component={Stack}
@@ -51,7 +57,7 @@ export default function ProfilePage() {
           <ChevronRightIcon sx={{ color: 'text.secondary' }} />
         </ListItemButton>
         <Divider />
-        <ListItemButton>
+        <ListItemButton component={Link} href='/profile/change-password'>
           <ListItemText>Đổi mật khẩu</ListItemText>
           <ChevronRightIcon sx={{ color: 'text.secondary' }} />
         </ListItemButton>

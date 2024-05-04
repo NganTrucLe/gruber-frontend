@@ -13,13 +13,10 @@ import Typography from '@mui/material/Typography';
 import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
 import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 
-import { useCurrentLocation } from '@/hooks';
+import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
 import { colors, Directions } from '@/libs/ui';
-import { price } from '@/libs/utils';
+import { formatPrice } from '@/libs/utils';
 import SuccessfulDialog from './SuccessfulDialog';
-
-const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_NAME_GOOGLE_MAPS_API_KEY;
-const GOOGLE_MAPS_ID = process.env.NEXT_PUBLIC_NAME_GOOGLE_MAPS_ID;
 
 const Main = styled('main')({
   width: '100vw',
@@ -35,12 +32,13 @@ const MapContainer = styled(APIProvider)({
 
 export default function RidePage() {
   const position = useCurrentLocation();
+  const { apiKey, mapId } = useGoogleMapAPI();
   const [toPickup] = useState(true);
   const [succeed, setSucceed] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
-      setSucceed(false);
+      setSucceed(true);
     }, 5000);
   });
 
@@ -77,16 +75,16 @@ export default function RidePage() {
 
   return (
     <Main>
-      {GOOGLE_MAPS_API_KEY === undefined ? (
+      {apiKey === undefined ? (
         <Typography variant='h6'>Không thể tải map</Typography>
       ) : (
-        <MapContainer apiKey={GOOGLE_MAPS_API_KEY}>
+        <MapContainer apiKey={apiKey}>
           <Map
             defaultCenter={position}
             defaultZoom={15}
             gestureHandling={'greedy'}
             disableDefaultUI={true}
-            mapId={GOOGLE_MAPS_ID}>
+            mapId={mapId}>
             <AdvancedMarker position={position} title={'Vị trí của tôi'}>
               <MyLocationIcon fontSize='large' sx={{ color: 'blue' }} color='primary' />
             </AdvancedMarker>
@@ -146,7 +144,7 @@ export default function RidePage() {
                 <b>{booking.pickup.name}</b>: {booking.pickup.formatted_address}
               </Typography>
               <Typography variant='body1'>
-                {price(booking.price)} &ensp; {booking.paymentMethod == 'cash' ? 'Tiền mặt' : 'Thẻ ngân hàng'}
+                {formatPrice(booking.price)} &ensp; {booking.paymentMethod == 'cash' ? 'Tiền mặt' : 'Thẻ ngân hàng'}
               </Typography>
             </div>
             <Divider />

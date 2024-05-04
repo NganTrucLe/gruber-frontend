@@ -7,6 +7,7 @@ export const Main = styled('main')(({ theme }) => ({
   position: 'absolute',
   top: '0',
   left: '50%',
+  minHeight: '100vh',
   transform: 'translate(-50%, 0)',
   [theme.breakpoints.down('sm')]: {
     width: '100%',

@@ -13,6 +13,11 @@ export function hiddenEmail(email: string) {
   return `${hiddenUsername}@${domain}`;
 }
 
-export function price(price: number) {
+export function formatPrice(price: number) {
   return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+}
+
+export function shortenAddress(address: string) {
+  const [first] = address.split(', ');
+  return first;
 }

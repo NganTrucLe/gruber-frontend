@@ -10,7 +10,11 @@ interface DirectionsProps {
   mainDirection?: boolean;
 }
 
-export function Directions(props: DirectionsProps) {
+function Component() {
+  return null;
+}
+
+export default function Directions(props: DirectionsProps) {
   const map = useMap();
   const routesLibrary = useMapsLibrary('routes');
   const [directionsService, setDirectionsService] = useState<google.maps.DirectionsService>();
@@ -73,12 +77,7 @@ export function Directions(props: DirectionsProps) {
     directionsRenderer.setRouteIndex(routeIndex);
   }, [routeIndex, directionsRenderer]);
 
-  if (!leg) return null;
+  if (!leg) return { distance: null, duration: null, directions: <Component /> };
 
-  return (
-    <div className='directions'>
-      {/* <p>Distance: {leg.distance?.text}</p>
-      <p>Duration: {leg.duration?.text}</p> */}
-    </div>
-  );
+  return { distance: leg.distance?.text, duration: leg.duration?.text, directions: <Component /> };
 }

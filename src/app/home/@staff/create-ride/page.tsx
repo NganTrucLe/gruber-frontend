@@ -8,13 +8,10 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import BackIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 
-import { useCurrentLocation } from '@/hooks';
+import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
 import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 import { useState } from 'react';
 import Link from 'next/link';
-
-const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_NAME_GOOGLE_MAPS_API_KEY;
-const GOOGLE_MAPS_ID = process.env.NEXT_PUBLIC_NAME_GOOGLE_MAPS_ID;
 
 function SearchGroup({
   onPickupChange,
@@ -84,21 +81,22 @@ export default function CreateRidePage() {
   const [pickup, setPickup] = useState<google.maps.places.PlaceResult | null>(null);
   const [destination, setDestination] = useState<google.maps.places.PlaceResult | null>(null);
   const position = useCurrentLocation();
+  const { apiKey, mapId } = useGoogleMapAPI();
 
   return (
     <main>
       <Stack direction='row' spacing={2}>
-        {GOOGLE_MAPS_API_KEY === undefined ? (
+        {apiKey === undefined ? (
           <Typography variant='h6'>Không thể tải map</Typography>
         ) : (
-          <APIProvider apiKey={GOOGLE_MAPS_API_KEY}>
+          <APIProvider apiKey={apiKey}>
             <Box sx={{ position: 'relative', height: '100vh', width: '100%', flexGrow: 1 }}>
               <Map
                 defaultCenter={position}
                 defaultZoom={15}
                 gestureHandling={'greedy'}
                 disableDefaultUI={true}
-                mapId={GOOGLE_MAPS_ID}>
+                mapId={mapId}>
                 <AdvancedMarker position={position} title={'Vị trí của tôi'}>
                   <MyLocationIcon fontSize='large' sx={{ color: 'blue' }} color='primary' />
                 </AdvancedMarker>

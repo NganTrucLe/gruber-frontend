@@ -16,7 +16,7 @@ import IncomeIcon from '@mui/icons-material/EqualizerRounded';
 import WalletIcon from '@mui/icons-material/PaymentRounded';
 
 import { Main, ScrollContainer, TopAppBar } from '@/libs/ui';
-import { price } from '@/libs/utils';
+import { formatPrice } from '@/libs/utils';
 
 export default function IncomePage() {
   // TODO: Fetch data from server
@@ -71,7 +71,7 @@ export default function IncomePage() {
                   Thu nhập {card.title}
                 </Typography>
                 <Typography variant='h5' fontWeight='bold'>
-                  {price(card.income)}
+                  {formatPrice(card.income)}
                 </Typography>
               </CardContent>
               <CardActions disableSpacing>

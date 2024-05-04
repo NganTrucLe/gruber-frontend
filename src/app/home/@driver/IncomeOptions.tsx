@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 
-import { price } from '@/libs/utils';
+import { formatPrice } from '@/libs/utils';
 
 export default function IncomeOptions(props: BackdropProps) {
   const router = useRouter();
@@ -53,7 +53,7 @@ export default function IncomeOptions(props: BackdropProps) {
           <div>
             <Typography>Thu nhập</Typography>
             <Typography variant='h5' fontWeight='bold'>
-              {price(wallet.income)}
+              {formatPrice(wallet.income)}
             </Typography>
           </div>
           <ChevronRightRounded />
@@ -76,7 +76,7 @@ export default function IncomeOptions(props: BackdropProps) {
           <div>
             <Typography>Ví</Typography>
             <Typography variant='h5' fontWeight='bold'>
-              {price(wallet.balance)}
+              {formatPrice(wallet.balance)}
             </Typography>
           </div>
           <ChevronRightRounded />

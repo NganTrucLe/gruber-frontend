@@ -2,5 +2,5 @@ import { atom } from 'recoil';
 
 export const roleState = atom({
   key: 'roleState',
-  default: 'driver',
+  default: 'user',
 });

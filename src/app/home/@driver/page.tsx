@@ -24,12 +24,9 @@ import RefreshIcon from '@mui/icons-material/RefreshRounded';
 import IncomeIcon from '@mui/icons-material/SignalCellularAltRounded';
 import StarIcon from '@mui/icons-material/StarRounded';
 
-import { useCurrentLocation } from '@/hooks';
+import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
 import IncomeOptions from './IncomeOptions';
 import { AutoNotiDialog, ManualNotiDialog } from './NotiDialog';
-
-const GOOGLE_MAPS_API_KEY = process.env.NEXT_PUBLIC_NAME_GOOGLE_MAPS_API_KEY;
-const GOOGLE_MAPS_ID = process.env.NEXT_PUBLIC_NAME_GOOGLE_MAPS_ID;
 
 const Main = styled('main')({
   width: '100vw',
@@ -97,6 +94,7 @@ export default function HomePage() {
   const [open, setOpen] = useState(true);
   const [openIncome, setOpenIncome] = useState(false);
   const position = useCurrentLocation();
+  const { apiKey, mapId } = useGoogleMapAPI();
   const router = useRouter();
 
   // TODO: Replace with listen to firebase notification later
@@ -140,16 +138,16 @@ export default function HomePage() {
 
   return (
     <Main>
-      {GOOGLE_MAPS_API_KEY === undefined ? (
+      {apiKey === undefined ? (
         <Typography variant='h6'>Không thể tải map</Typography>
       ) : (
-        <MapContainer apiKey={GOOGLE_MAPS_API_KEY}>
+        <MapContainer apiKey={apiKey}>
           <Map
             defaultCenter={position}
             defaultZoom={15}
             gestureHandling={'greedy'}
             disableDefaultUI={true}
-            mapId={GOOGLE_MAPS_ID}>
+            mapId={mapId}>
             <AdvancedMarker position={position} title={'Vị trí của tôi'}>
               <MyLocationIcon fontSize='large' sx={{ color: 'blue' }} color='primary' />
             </AdvancedMarker>

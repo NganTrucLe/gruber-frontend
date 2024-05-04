@@ -4,6 +4,7 @@ import { useRecoilState } from 'recoil';
 
 import { Role } from '@/libs/enum';
 import { roleState } from '@/recoils';
+import { Navigation } from '@/libs/ui';
 
 export default function HistoriesLayout({
   children,
@@ -29,6 +30,7 @@ export default function HistoriesLayout({
   return (
     <>
       {roleComponent}
+      {role == 'user' ? <Navigation /> : null}
       {children}
     </>
   );

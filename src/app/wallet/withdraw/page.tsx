@@ -37,7 +37,7 @@ export default function WithdrawPage() {
   const options = [200000, 500000, 1000000, 2000000];
   const balance = 567000;
 
-  function price(value: number) {
+  function formatPrice(value: number) {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND',
@@ -57,17 +57,17 @@ export default function WithdrawPage() {
     <Main>
       <TopAppBar title='Chuyển khoản' backHref='/wallet' />
       <Stack direction='row' alignItems={'center'} sx={{ mb: 2 }}>
-        <TransactionCard variant='send' primary='Ví tín dụng' secondary={price(inputValue)} />
+        <TransactionCard variant='send' primary='Ví tín dụng' secondary={formatPrice(inputValue)} />
         <LinearProgress color='success' sx={{ flexGrow: 1 }} />
         <TransactionCard variant='receive' primary='ACB' secondary='18921857' />
       </Stack>
       <Stack alignItems={'center'} sx={{ width: '100%' }}>
         <Typography>
-          Số dư ví tín dụng: <b>{price(balance)}</b>
+          Số dư ví tín dụng: <b>{formatPrice(balance)}</b>
         </Typography>
         <StyledInput
           type='number'
-          placeholder={price(0)}
+          placeholder={formatPrice(0)}
           value={inputValue}
           onChange={(e) => setInputValue(Number(e.target.value))}
           sx={{
@@ -82,7 +82,7 @@ export default function WithdrawPage() {
         <Chips>
           <Stack direction='row' mb={2} spacing={1} justifyContent={'center'}>
             {options.map((option) => (
-              <Chip key={option} label={price(option)} onClick={() => setInputValue(option)} />
+              <Chip key={option} label={formatPrice(option)} onClick={() => setInputValue(option)} />
             ))}
           </Stack>
         </Chips>

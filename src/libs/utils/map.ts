@@ -1,4 +1,4 @@
-export function calculateDistance(p1: google.maps.LatLng, p2: google.maps.LatLng): number {
+export function calculateDistance(p1: google.maps.LatLng, p2: google.maps.LatLng): string {
   // Convert latitude and longitude to radians
   const lat1 = (p1.lat() * Math.PI) / 180;
   const lon1 = (p1.lng() * Math.PI) / 180;
@@ -21,5 +21,8 @@ export function calculateDistance(p1: google.maps.LatLng, p2: google.maps.LatLng
 
   // Convert the distance to kilometers
   const earthRadiusKm = 6371;
-  return distance * earthRadiusKm;
+  const distanceKm = distance * earthRadiusKm;
+  if (distanceKm < 1) {
+    return `${(distanceKm * 1000).toFixed(0)} m`;
+  } else return `${distanceKm.toFixed(2)} km`;
 }

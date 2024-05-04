@@ -16,7 +16,7 @@ import IncomeIcon from '@mui/icons-material/EqualizerRounded';
 import WalletIcon from '@mui/icons-material/PaymentRounded';
 
 import { Main, TopAppBar } from '@/libs/ui';
-import { price } from '@/libs/utils';
+import { formatPrice } from '@/libs/utils';
 import BankWalletDialog from './BankWalletDialog';
 import CashWalletDialog from './CashWalletDialog';
 
@@ -48,7 +48,7 @@ export default function WalletPage() {
               Ví tín dụng
             </Typography>
             <Typography variant='h5' fontWeight='bold'>
-              {price(500000)}
+              {formatPrice(500000)}
             </Typography>
           </CardContent>
           <CardActions>
@@ -63,7 +63,7 @@ export default function WalletPage() {
               Ví tiền mặt
             </Typography>
             <Typography variant='h5' fontWeight='bold'>
-              {price(500000)}
+              {formatPrice(500000)}
             </Typography>
           </CardContent>
           <CardActions>

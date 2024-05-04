@@ -2,8 +2,10 @@
 import { ReactNode } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { Role } from '@/libs/enum';
 import { roleState } from '@/recoils';
+import { Role } from '@/libs/enum';
+import { Navigation } from '@/libs/ui';
+
 export default function HomeLayout({
   children,
   admin,
@@ -37,6 +39,7 @@ export default function HomeLayout({
   return (
     <>
       {roleComponent}
+      {role == 'user' ? <Navigation /> : null}
       {children}
     </>
   );

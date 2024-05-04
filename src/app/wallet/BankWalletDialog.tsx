@@ -3,7 +3,7 @@ import Link from 'next/link';
 
 import { Button, Dialog, DialogContent, DialogContentText, DialogProps, DialogTitle, Stack } from '@mui/material';
 
-import { price } from '@/libs/utils';
+import { formatPrice } from '@/libs/utils';
 
 export default function BankWalletDialog(props: DialogProps) {
   return (
@@ -11,7 +11,7 @@ export default function BankWalletDialog(props: DialogProps) {
       <DialogTitle>Ví tín dụng </DialogTitle>
       <DialogContent>
         <DialogContentText gutterBottom color='text.primary' fontWeight='bold' variant='h3' textAlign={'center'}>
-          {price(500000)}
+          {formatPrice(500000)}
         </DialogContentText>
         <DialogContentText>
           Ví tín dụng hoạt động như một <b>hình thức đặt cọc</b> của tài xế dành cho đơn vị Gruber. Các cuốc xe thanh
