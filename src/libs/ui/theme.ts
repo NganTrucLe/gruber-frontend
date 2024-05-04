@@ -13,25 +13,22 @@ const beVietnamPro = Be_Vietnam_Pro({
 
 let theme = createTheme({
   palette: {
-    background: {
-      default: colors.neutral[50],
-    },
     primary: {
-      main: colors.blue[500],
-      light: colors.blue[200],
-      dark: colors.blue[700],
-      darker: colors.blue[900],
+      main: colors.green[500],
+      light: colors.green[200],
+      dark: colors.green[700],
+      darker: colors.green[900],
     },
     secondary: {
-      main: colors.blue[500],
-      light: colors.blue[200],
-      dark: colors.blue[700],
+      main: colors.green[500],
+      light: colors.green[200],
+      dark: colors.green[700],
     },
     info: {
       main: colors.neutral[50],
       light: colors.neutral[50],
       dark: colors.neutral[100],
-      contrastText: colors.blue[900],
+      contrastText: colors.green[900],
     },
     success: {
       main: colors.notification.success,
@@ -47,21 +44,21 @@ let theme = createTheme({
   typography: {
     fontFamily: beVietnamPro.style.fontFamily + ',Be Vietnam Pro, sans-serif',
     linkPrimary: {
-      color: colors.blue[500],
+      color: colors.green[500],
       textDecoration: 'underline',
       fontWeight: 600,
       fontSize: '14px',
       '&:hover': {
-        color: colors.blue[700],
+        color: colors.green[700],
       },
     },
     linkAccent: {
-      color: colors.blue[900],
+      color: colors.green[900],
       textDecoration: 'underline',
       fontWeight: 600,
       fontSize: '14px',
       '&:hover': {
-        color: colors.blue[700],
+        color: colors.green[700],
       },
     },
   },
@@ -82,6 +79,7 @@ let theme = createTheme({
     MuiButton: {
       defaultProps: {
         variant: 'contained',
+        size: 'large',
       },
       variants: [
         {
@@ -95,7 +93,7 @@ let theme = createTheme({
           props: { variant: 'text', color: 'primary' },
           style: {
             '&:hover': {
-              backgroundColor: colors.blue[50],
+              backgroundColor: colors.green[50],
             },
           },
         },
@@ -103,7 +101,17 @@ let theme = createTheme({
           props: { variant: 'outlined', color: 'primary' },
           style: {
             '&:hover': {
-              backgroundColor: colors.blue[50],
+              backgroundColor: colors.green[50],
+            },
+          },
+        },
+        {
+          props: { variant: 'secondary' },
+          style: {
+            color: colors.green[700],
+            backgroundColor: colors.green[50],
+            '&:hover': {
+              backgroundColor: colors.neutral[50],
             },
           },
         },
@@ -115,7 +123,7 @@ let theme = createTheme({
           fontWeight: 600,
           whiteSpace: 'nowrap',
           fontSize: '14px',
-          borderRadius: '0.5rem',
+          borderRadius: '50rem',
           '&.Mui-disabled': {},
           '&:hover': {
             boxShadow: 'none',
@@ -140,11 +148,11 @@ let theme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          borderRadius: '.5rem !important',
+          borderRadius: '4rem !important',
           fontSize: '14px',
           height: '40px',
           '& .MuiOutlinedInput-input': {
-            padding: '.5rem .5rem',
+            padding: '.5rem 1rem',
           },
         },
       },
@@ -214,18 +222,28 @@ let theme = createTheme({
         },
       },
     },
+    MuiCard: {
+      variants: [
+        {
+          props: { variant: 'outlined' },
+          style: {
+            border: `1px solid ${colors.neutral[100]}`,
+          },
+        },
+      ],
+    },
     MuiChip: {
       variants: [
         {
           props: { variant: 'outlined' },
           style: {
-            background: colors.blue[50],
+            background: colors.green[50],
           },
         },
         {
           props: { color: 'default' },
           style: {
-            color: colors.blue[500],
+            color: colors.green[500],
             background: colors.neutral[25],
           },
         },
@@ -276,6 +294,10 @@ declare module '@mui/material/styles' {
   interface PaperVariantsOptions {
     section?: React.CSSProperties;
   }
+
+  interface ButtonVariants {
+    secondary: React.CSSProperties;
+  }
 }
 
 declare module '@mui/material/Paper' {
@@ -292,4 +314,9 @@ declare module '@mui/material/Typography' {
   }
 }
 
+declare module '@mui/material/Button' {
+  interface ButtonPropsVariantOverrides {
+    secondary: true;
+  }
+}
 export default theme;

@@ -5,7 +5,7 @@ import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 
-import { ReactQueryProvider } from '@/libs/providers';
+import { ReactQueryProvider, RecoilProvider } from '@/libs/providers';
 import theme from '@/libs/ui/theme';
 
 export const metadata: Metadata = {
@@ -21,14 +21,16 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body>
-        <ReactQueryProvider>
-          <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
-              {children}
-            </ThemeProvider>
-          </AppRouterCacheProvider>
-        </ReactQueryProvider>
+        <RecoilProvider>
+          <ReactQueryProvider>
+            <AppRouterCacheProvider>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                {children}
+              </ThemeProvider>
+            </AppRouterCacheProvider>
+          </ReactQueryProvider>
+        </RecoilProvider>
       </body>
     </html>
   );
