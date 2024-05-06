@@ -46,10 +46,10 @@ export function ManualNotiDialog({
         <DialogContent sx={{ mt: 2 }}>
           <DialogContentText textAlign='center'>Cuốc xe mới</DialogContentText>
           <DialogContentText color='black' textAlign='left'>
-            <b>Địa điểm đón:</b> {bookingInfo.pickup}
+            <b>Địa điểm đón:</b> {bookingInfo?.pickup}
           </DialogContentText>
           <DialogContentText color='black'>
-            <b>Địa điểm trả khách:</b> {bookingInfo.destination}
+            <b>Địa điểm trả khách:</b> {bookingInfo?.destination}
           </DialogContentText>
           <DialogContentText textAlign='center'>Khách hàng đang chờ bạn</DialogContentText>
         </DialogContent>

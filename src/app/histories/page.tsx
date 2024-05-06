@@ -17,6 +17,7 @@ import TimeToLeaveRoundedIcon from '@mui/icons-material/TimeToLeaveRounded';
 
 import { formatPrice, shortenAddress } from '@/libs/utils';
 import { getBookingHistory } from '@/libs/query';
+import { TopAppBar } from '@/libs/ui';
 
 const Main = styled('main')(({ theme }) => ({
   padding: theme.spacing(2),
@@ -42,7 +43,7 @@ export default function HistoryPage() {
   if (status === 'success' && data) {
     return (
       <Main>
-        <Typography variant='h6'>Lịch sử</Typography>
+        <TopAppBar title='Lịch sử' backHref='/home' />
         <List>
           {data.map((history) => {
             const { booking_route, finished_on, price, vehicle_type } = history;

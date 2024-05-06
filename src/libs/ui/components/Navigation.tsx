@@ -1,12 +1,13 @@
 'use client';
-import { useRouter, usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
+
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import Paper from '@mui/material/Paper';
 
-import RideIcon from '@mui/icons-material/TwoWheelerRounded';
-import HistoryIcon from '@mui/icons-material/ReceiptLongRounded';
 import AccountIcon from '@mui/icons-material/AccountCircleRounded';
+import HistoryIcon from '@mui/icons-material/ReceiptLongRounded';
+import RideIcon from '@mui/icons-material/TwoWheelerRounded';
 
 export function Navigation() {
   const router = useRouter();

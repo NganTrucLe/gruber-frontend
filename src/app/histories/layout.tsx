@@ -3,8 +3,8 @@ import { ReactNode } from 'react';
 import { useRecoilState } from 'recoil';
 
 import { Role } from '@/libs/enum';
-import { roleState } from '@/recoils';
 import { Navigation } from '@/libs/ui';
+import { roleState } from '@/recoils';
 
 export default function HistoriesLayout({
   children,
