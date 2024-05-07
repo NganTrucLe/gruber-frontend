@@ -1,7 +1,10 @@
 'use client';
 import React from 'react';
+import { useRouter } from 'next/navigation';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
 
+import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Fab from '@mui/material/Fab';
@@ -14,12 +17,9 @@ import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
 import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 
 import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
+import { cancelRide, currentRideUser } from '@/libs/query';
 import { Directions, Marker } from '@/libs/ui';
 import { formatPrice } from '@/libs/utils';
-import Avatar from '@mui/material/Avatar';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { cancelRide, currentRideUser } from '@/libs/query';
-import { useRouter } from 'next/navigation';
 
 const Main = styled('main')({
   width: '100vw',

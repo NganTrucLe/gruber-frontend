@@ -14,8 +14,8 @@ import Typography from '@mui/material/Typography';
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRightRounded';
 
-import { roleState } from '@/recoils';
 import { colors, Main, Navigation, TopAppBar } from '@/libs/ui';
+import { roleState } from '@/recoils';
 
 export default function ProfilePage() {
   const [role] = useRecoilState(roleState);

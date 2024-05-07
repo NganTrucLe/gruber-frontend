@@ -24,7 +24,7 @@ import RefreshIcon from '@mui/icons-material/RefreshRounded';
 import IncomeIcon from '@mui/icons-material/SignalCellularAltRounded';
 import StarIcon from '@mui/icons-material/StarRounded';
 
-import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
+import { useCurrentLocation, useFirebaseMessaging, useGoogleMapAPI } from '@/hooks';
 import IncomeOptions from './IncomeOptions';
 import { AutoNotiDialog, ManualNotiDialog } from './NotiDialog';
 
@@ -87,21 +87,26 @@ function MessageManual() {
   );
 }
 
+interface Noti {
+  pickup: string;
+  destination: string;
+}
 export default function HomePage() {
   const [online, setOnline] = useState(true);
   const [message, setMessage] = useState<ReactNode>(null);
   const [auto, setAuto] = useState(false);
-  const [open, setOpen] = useState(true);
+  const [newRide, setNewRide] = useState<Noti | null>(null);
   const [openIncome, setOpenIncome] = useState(false);
   const position = useCurrentLocation();
   const { apiKey, mapId } = useGoogleMapAPI();
   const router = useRouter();
-
-  // TODO: Replace with listen to firebase notification later
-  const bookingInfo = {
-    pickup: '123 Nguyễn Thị Minh Khai, Quận 1',
-    destination: '456 Nguyễn Thị Minh Khai, Quận 1',
-  };
+  useFirebaseMessaging((payload) => {
+    const data: Noti = {
+      pickup: payload.data.pickup,
+      destination: payload.data.destination,
+    };
+    setNewRide(data);
+  });
 
   const handleChangeOnline = () => {
     setOnline(!online);
@@ -114,13 +119,13 @@ export default function HomePage() {
   };
 
   const handleDecline = () => {
-    setOpen(false);
+    setNewRide(null);
     // TODO: Trigger to firebase to decline
     // ...
   };
 
   const handleAccept = () => {
-    setOpen(false);
+    setNewRide(null);
     // Trigger to firebase and backend to accept
     // ...
     router.push('/ride');
@@ -267,12 +272,12 @@ export default function HomePage() {
           </Stack>
         </MapContainer>
       )}
-      {auto ? (
-        <AutoNotiDialog open={open} onClose={handleAccept} />
+      {auto && Boolean(newRide) ? (
+        <AutoNotiDialog open={Boolean(newRide)} onClose={handleAccept} />
       ) : (
         <ManualNotiDialog
-          props={{ open: open, onClose: handleDecline }}
-          bookingInfo={bookingInfo}
+          props={{ open: Boolean(newRide), onClose: handleDecline }}
+          bookingInfo={newRide}
           onAccept={() => handleAccept()}
           onDecline={() => handleDecline()}
         />

@@ -1,7 +1,12 @@
 'use client';
+import { useEffect } from 'react';
 import { ReactNode } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { styled } from '@mui/material/styles';
+
+import { useLocalStorage } from '@/hooks';
+
 const Main = styled('main')(({ theme }) => ({
   padding: '1rem',
   position: 'absolute',
@@ -29,5 +34,14 @@ const Main = styled('main')(({ theme }) => ({
   },
 }));
 export default function AuthLayout({ children }: { children: ReactNode }) {
+  const localStorage = useLocalStorage('idToken');
+  const router = useRouter();
+
+  useEffect(() => {
+    if (localStorage.getStoredValue()) {
+      router.push('/home');
+    }
+  }, []);
+
   return <Main>{children}</Main>;
 }
