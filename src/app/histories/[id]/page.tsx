@@ -1,8 +1,9 @@
 'use client';
 import { useState } from 'react';
+import { useEffect } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { APIProvider, Map } from '@vis.gl/react-google-maps';
 import { format } from 'date-fns';
-import { useQuery, useMutation } from '@tanstack/react-query';
 
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -15,10 +16,9 @@ import CashIcon from '@mui/icons-material/LocalAtmRounded';
 import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 
 import { useGoogleMapAPI } from '@/hooks';
-import { formatPrice } from '@/libs/utils';
-import { TopAppBar, Marker } from '@/libs/ui';
 import { getBookingById, updateRating } from '@/libs/query';
-import { useEffect } from 'react';
+import { Marker, TopAppBar } from '@/libs/ui';
+import { formatPrice } from '@/libs/utils';
 
 const Main = styled('main')(({ theme }) => ({
   padding: theme.spacing(2),

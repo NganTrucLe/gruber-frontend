@@ -1,7 +1,6 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import { bookARide } from '@/libs/query';
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
 
@@ -21,12 +20,13 @@ import CashIcon from '@mui/icons-material/LocalAtmRounded';
 import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 
 import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
+import { PaymentMethod, Vehicle } from '@/libs/enum';
+import { bookARide } from '@/libs/query';
 import { Directions, Marker } from '@/libs/ui';
 import { calculateDistance } from '@/libs/utils';
-import { Vehicle, PaymentMethod } from '@/libs/enum';
+import SearchGroup from './SearchGroup';
 import SelectMethodDialog from './SelectMethodDialog';
 import SelectVehicle from './SelectVehicle';
-import SearchGroup from './SearchGroup';
 
 const Main = styled('main')({
   width: '100vw',

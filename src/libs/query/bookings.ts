@@ -1,8 +1,8 @@
 // TODO: Implement the query function to get all histories and a single history by id
 import histories from '@/libs/mocks/historiesAll.json';
 import history from '@/libs/mocks/historySingle.json';
-import rideUser from '@/libs/mocks/rideUser.json';
 import rideDriver from '@/libs/mocks/rideDriver.json';
+import rideUser from '@/libs/mocks/rideUser.json';
 
 export const getBookingHistory = async () => {
   return histories;

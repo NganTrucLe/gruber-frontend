@@ -7,8 +7,8 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
-import { InputLayout, Main, PasswordInput, TopAppBar } from '@/libs/ui';
 import { updatePassword } from '@/libs/query';
+import { InputLayout, Main, PasswordInput, TopAppBar } from '@/libs/ui';
 
 export default function ChangePasswordPage() {
   const router = useRouter();

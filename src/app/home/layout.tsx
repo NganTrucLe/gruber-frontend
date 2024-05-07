@@ -2,9 +2,9 @@
 import { ReactNode } from 'react';
 import { useRecoilState } from 'recoil';
 
-import { roleState } from '@/recoils';
 import { Role } from '@/libs/enum';
 import { Navigation } from '@/libs/ui';
+import { roleState } from '@/recoils';
 
 export default function HomeLayout({
   children,
