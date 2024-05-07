@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
-import { format } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
+import { format } from 'date-fns';
 
 import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
@@ -12,12 +12,12 @@ import ListItemText from '@mui/material/ListItemText';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-import TwoWheelerRoundedIcon from '@mui/icons-material/TwoWheelerRounded';
 import TimeToLeaveRoundedIcon from '@mui/icons-material/TimeToLeaveRounded';
+import TwoWheelerRoundedIcon from '@mui/icons-material/TwoWheelerRounded';
 
-import { formatPrice, shortenAddress } from '@/libs/utils';
 import { getBookingHistory } from '@/libs/query';
 import { TopAppBar } from '@/libs/ui';
+import { formatPrice, shortenAddress } from '@/libs/utils';
 
 const Main = styled('main')(({ theme }) => ({
   padding: theme.spacing(2),
