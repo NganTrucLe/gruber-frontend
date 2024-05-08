@@ -39,7 +39,7 @@ export default function AuthTemplate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (localStorage.getStoredValue('idToken')) {
-      router.push('/home');
+      router.push('/');
     }
   }, []);
 

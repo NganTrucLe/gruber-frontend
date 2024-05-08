@@ -3,3 +3,4 @@ export { default as useDirections } from './useDirections';
 export { default as useFirebaseMessaging } from './useFirebaseMessaging';
 export { default as useGoogleMapAPI } from './useGoogleMapAPI';
 export { default as useLocalStorage } from './useLocalStorage';
+export { default as useToast } from './useToast';

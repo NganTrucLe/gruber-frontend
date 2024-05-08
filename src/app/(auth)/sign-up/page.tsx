@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 
 import EmailIcon from '@mui/icons-material/EmailRounded';
 
+import { useToast } from '@/hooks';
 import { register } from '@/libs/query';
 import { InputLayout, LoadingButton, PasswordInput } from '@/libs/ui';
 import { SignUpSchema } from '@/libs/validations';
@@ -22,6 +23,7 @@ interface SignUpForm {
 
 export default function SignUp() {
   const router = useRouter();
+  const toast = useToast();
   const { mutate, isPending } = useMutation({
     mutationFn: (request: { email: string; password: string }) =>
       register({
@@ -30,11 +32,11 @@ export default function SignUp() {
       }),
     mutationKey: ['register'],
     onSuccess: () => {
-      alert('Đăng ký thành công, check email để xác thực tài khoản');
+      toast.setToast('success', 'Đăng ký thành công', 'Check email để xác thực tài khoản');
       router.push('/log-in');
     },
     onError: (error) => {
-      alert(error.message);
+      toast.setToast('error', 'Đăng ký thất bại', error.message);
     },
   });
 

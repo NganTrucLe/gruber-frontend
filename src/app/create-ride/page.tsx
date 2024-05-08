@@ -2,8 +2,10 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
+import { useRecoilState } from 'recoil';
 
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -17,13 +19,14 @@ import Typography from '@mui/material/Typography';
 import BackIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 
-import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
+import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
 import { Vehicle } from '@/libs/enum';
 import { ILocationRecord, IRideFromStaff } from '@/libs/interfaces';
 import { createRideFromStaffFull } from '@/libs/query';
 import { LoadingButton, Marker } from '@/libs/ui';
+import { roleState } from '@/recoils';
 import BasicInfoForm from './BasicInfoForm';
-import { useRouter } from 'next/navigation';
+
 const DynamicChooseDriver = dynamic(() => import('./ChooseDriver'), {
   ssr: false,
   loading: () => <p>Loading...</p>,
@@ -34,6 +37,8 @@ const DynamicLocate = dynamic(() => import('./Locate'), {
 });
 
 export default function CreateRidePage() {
+  const { setToast } = useToast();
+  const [role] = useRecoilState(roleState);
   const router = useRouter();
   const position = useCurrentLocation();
   const { apiKey, mapId } = useGoogleMapAPI();
@@ -48,11 +53,11 @@ export default function CreateRidePage() {
   const { mutate, isPending } = useMutation({
     mutationFn: createRideFromStaffFull,
     onError: (error) => {
-      console.error(error);
+      setToast('error', 'Đặt xe thất bại', error.message);
     },
     onSuccess: ({ message }) => {
-      alert(message);
-      router.push('/home');
+      setToast('success', message);
+      router.push('/');
     },
   });
 
@@ -114,6 +119,8 @@ export default function CreateRidePage() {
       ),
     },
   ];
+
+  if (role !== 'passenger') return null;
   return (
     <main>
       <Stack direction='row' spacing={2}>
@@ -137,7 +144,7 @@ export default function CreateRidePage() {
             </Box>
             <Stack spacing={0} sx={{ width: '100%', flexGrow: 1, py: 2, pr: 2 }}>
               <Typography variant='h5' fontWeight='bold' gutterBottom>
-                <IconButton component={Link} href='/home'>
+                <IconButton component={Link} href='/'>
                   <BackIcon />
                 </IconButton>
                 &emsp;Tạo cuốc xe mới

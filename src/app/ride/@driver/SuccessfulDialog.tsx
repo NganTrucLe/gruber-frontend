@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
 
-import Button from '@mui/material/Button';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -10,20 +10,28 @@ import DialogTitle from '@mui/material/DialogTitle';
 import CardIcon from '@mui/icons-material/CreditCardRounded';
 import CashIcon from '@mui/icons-material/LocalAtmRounded';
 
+import { useToast } from '@/hooks';
+import { BookingStatus } from '@/libs/enum';
+import { updateRideStatus } from '@/libs/query';
+import { LoadingButton } from '@/libs/ui';
 import { formatPrice } from '@/libs/utils';
 
-// TODO: Update data schema passed by parent component
 export default function SuccessfulDialog({ props, booking }: { props: DialogProps; booking: any }) {
   const router = useRouter();
-
-  const handleCheckout = () => {
-    // TODO: trigger firebase and backend to update payment
-    router.push('/home');
-  };
+  const toast = useToast();
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => updateRideStatus(booking.id, BookingStatus.COMPLETED),
+    onSuccess: () => {
+      router.push('/');
+    },
+    onError: (message) => {
+      toast.setToast('error', 'Xác nhận thanh toán thất bại', `Kiểm tra lại đường truyền hoặc thử lại sau\n${message}`);
+    },
+  });
 
   return (
     <Dialog {...props}>
-      <DialogTitle variant='body1'>Thanh toán cho {booking.customer.name}</DialogTitle>
+      <DialogTitle variant='body1'>Thanh toán cho {booking.name}</DialogTitle>
       <DialogContent sx={{ textAlign: 'center' }}>
         <DialogContentText>
           {booking.paymentMethod == 'cash' ? (
@@ -42,9 +50,9 @@ export default function SuccessfulDialog({ props, booking }: { props: DialogProp
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button size='large' fullWidth onClick={handleCheckout}>
+        <LoadingButton size='large' fullWidth onClick={() => mutate()} loading={isPending}>
           Xác nhận thanh toán
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

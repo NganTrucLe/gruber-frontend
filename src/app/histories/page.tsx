@@ -43,7 +43,7 @@ export default function HistoryPage() {
   if (status === 'success' && data) {
     return (
       <Main>
-        <TopAppBar title='Lịch sử' backHref='/home' />
+        <TopAppBar title='Lịch sử' backHref='/' />
         <List>
           {data.map((history) => {
             const { booking_route, finished_on, price, vehicle_type } = history;

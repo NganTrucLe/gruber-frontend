@@ -18,7 +18,7 @@ export default function SuccessfulDialog({ props, booking }: { props: DialogProp
 
   const handleCheckout = () => {
     // TODO: trigger firebase and backend to update payment
-    router.push('/home');
+    router.push('/');
   };
 
   return (
