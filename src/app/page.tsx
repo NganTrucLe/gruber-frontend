@@ -9,7 +9,7 @@ import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-import { roleState } from '@/recoils';
+import { roleState, RoleType } from '@/recoils';
 
 const Main = styled('main')(({ theme }) => ({
   padding: '1rem',
@@ -49,10 +49,11 @@ export default function Home() {
         <Button sx={{ width: '100%' }}>Đặt xe</Button>
       </Link>
       <Typography>Chọn role để test</Typography>
-      <Select onChange={(e) => setRole(e.target.value)} defaultValue={role}>
+      <Select onChange={(e) => setRole(e.target.value as RoleType)} defaultValue={role}>
         <MenuItem value='driver'>Tài xế</MenuItem>
         <MenuItem value='user'>Khách hàng</MenuItem>
         <MenuItem value='staff'>Nhân viên</MenuItem>
+        <MenuItem value='admin'>Quản trị viên</MenuItem>
       </Select>
     </Main>
   );

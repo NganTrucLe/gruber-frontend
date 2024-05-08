@@ -5,7 +5,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
 
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Fab from '@mui/material/Fab';
 import Paper from '@mui/material/Paper';
@@ -18,7 +17,7 @@ import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 
 import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
 import { cancelRide, currentRideUser } from '@/libs/query';
-import { Directions, Marker } from '@/libs/ui';
+import { Directions, LoadingButton, Marker } from '@/libs/ui';
 import { formatPrice } from '@/libs/utils';
 
 const Main = styled('main')({
@@ -41,7 +40,8 @@ export default function RidePage() {
     queryKey: ['current-ride'],
     queryFn: currentRideUser,
   });
-  const { mutate } = useMutation({
+
+  const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       if (status == 'success') await cancelRide(data?.id);
     },
@@ -133,9 +133,14 @@ export default function RidePage() {
               </div>
               <Divider />
               <Stack direction='row' spacing={2} sx={{ width: '100%' }}>
-                <Button size='large' sx={{ flexGrow: 1 }} variant='outlined' onClick={handleCancelRide}>
+                <LoadingButton
+                  loading={isPending}
+                  size='large'
+                  sx={{ flexGrow: 1 }}
+                  variant='outlined'
+                  onClick={handleCancelRide}>
                   Hủy chuyến
-                </Button>
+                </LoadingButton>
                 <Fab size='medium' sx={{ boxShadow: 0 }} color='primary'>
                   <PhoneIcon />
                 </Fab>

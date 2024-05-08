@@ -29,7 +29,7 @@ export default function SelectMethodDialog(props: SelectMethodDialogProps) {
   const handleListItemClick = (value: string) => {
     if (value === 'cash' || !value) {
       onClose(value as PaymentMethod);
-    } else if (value === 'bank') onClose(value as PaymentMethod);
+    } else if (value === 'card') onClose(value as PaymentMethod);
   };
 
   return (
@@ -45,7 +45,7 @@ export default function SelectMethodDialog(props: SelectMethodDialogProps) {
           </ListItemButton>
         </ListItem>
         <ListItem>
-          <ListItemButton onClick={() => handleListItemClick('bank')} selected={selectedValue === 'bank'}>
+          <ListItemButton onClick={() => handleListItemClick('card')} selected={selectedValue === 'card'}>
             <ListItemIcon>
               <CardIcon />
             </ListItemIcon>
