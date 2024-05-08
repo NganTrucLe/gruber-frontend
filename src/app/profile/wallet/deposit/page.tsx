@@ -37,7 +37,7 @@ const Chips = styled('div')({
   marginLeft: '-1rem',
 });
 
-type MoneySource = 'cash-wallet' | 'bank';
+type MoneySource = 'cash-wallet' | 'card';
 export default function WithdrawPage() {
   const [moneySource, setMoneySource] = useState<MoneySource>('cash-wallet');
   const [inputValue, setInputValue] = useState(0);
@@ -83,7 +83,7 @@ export default function WithdrawPage() {
           <Typography color='text.secondary'>Chọn nguồn tiền</Typography>
           <RadioGroup defaultValue='cash-wallet' onChange={(e) => setMoneySource(e.target.value as MoneySource)}>
             <FormControlLabel value='cash-wallet' control={<Radio />} label='Ví tiền mặt (Số dư: 230.000đ)' />
-            <FormControlLabel value='bank' control={<Radio />} label='ACB (18921857)' />
+            <FormControlLabel value='card' control={<Radio />} label='ACB (18921857)' />
           </RadioGroup>
         </FormControl>
         <StyledInput

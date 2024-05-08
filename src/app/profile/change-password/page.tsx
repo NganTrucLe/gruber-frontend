@@ -7,22 +7,22 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 
+import { useToast } from '@/hooks';
 import { updatePassword } from '@/libs/query';
 import { InputLayout, Main, PasswordInput, TopAppBar } from '@/libs/ui';
 
 export default function ChangePasswordPage() {
   const router = useRouter();
+  const toast = useToast();
 
   const { mutate } = useMutation({
     mutationFn: (data: { userId: string; data: any }) => updatePassword(data.userId, data.data),
     onSuccess: () => {
       router.push('/profile');
-      // show success message
-      alert('Đổi mật khẩu thành công');
+      toast.setToast('success', 'Đổi mật khẩu thành công');
     },
     onError: (error) => {
-      // show error message
-      alert('Đổi mật khẩu thất bại ' + error.message);
+      toast.setToast('error', 'Đổi mật khẩu thất bại', error.message);
     },
   });
 

@@ -6,6 +6,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 
 import { ReactQueryProvider, RecoilProvider } from '@/libs/providers';
+import { Toast } from '@/libs/ui';
 import theme from '@/libs/ui/theme';
 
 export const metadata: Metadata = {
@@ -27,6 +28,7 @@ export default function RootLayout({
               <ThemeProvider theme={theme}>
                 <CssBaseline />
                 {children}
+                <Toast />
               </ThemeProvider>
             </AppRouterCacheProvider>
           </ReactQueryProvider>

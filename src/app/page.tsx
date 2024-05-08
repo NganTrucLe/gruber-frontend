@@ -1,15 +1,32 @@
 'use client';
 import React from 'react';
-import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useRecoilState } from 'recoil';
 
-import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import { styled } from '@mui/material/styles';
-import Typography from '@mui/material/Typography';
 
+import { Navigation } from '@/libs/ui';
 import { roleState } from '@/recoils';
+
+const HomePassenger = dynamic(() => import('./_components').then((mod) => mod.HomePassenger), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
+
+const HomeAdmin = dynamic(() => import('./_components').then((mod) => mod.HomeAdmin), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
+
+const HomeDriver = dynamic(() => import('./_components').then((mod) => mod.HomeDriver), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
+
+const HomeStaff = dynamic(() => import('./_components').then((mod) => mod.HomeStaff), {
+  ssr: false,
+  loading: () => <p>Loading...</p>,
+});
 
 const Main = styled('main')(({ theme }) => ({
   padding: '1rem',
@@ -38,22 +55,23 @@ const Main = styled('main')(({ theme }) => ({
   },
 }));
 export default function Home() {
-  const [role, setRole] = useRecoilState(roleState);
+  const [role] = useRecoilState(roleState);
 
-  return (
-    <Main>
-      <Link href='/welcome'>
-        <Button sx={{ width: '100%' }}>Đăng ký, đăng nhập</Button>
-      </Link>
-      <Link href='/home'>
-        <Button sx={{ width: '100%' }}>Đặt xe</Button>
-      </Link>
-      <Typography>Chọn role để test</Typography>
-      <Select onChange={(e) => setRole(e.target.value)} defaultValue={role}>
-        <MenuItem value='driver'>Tài xế</MenuItem>
-        <MenuItem value='user'>Khách hàng</MenuItem>
-        <MenuItem value='staff'>Nhân viên</MenuItem>
-      </Select>
-    </Main>
-  );
+  switch (role) {
+    case 'passenger':
+      return (
+        <>
+          <HomePassenger />
+          <Navigation />
+        </>
+      );
+    case 'driver':
+      return <HomeDriver />;
+    case 'admin':
+      return <HomeAdmin />;
+    case 'staff':
+      return <HomeStaff />;
+    default:
+      return <Main />;
+  }
 }

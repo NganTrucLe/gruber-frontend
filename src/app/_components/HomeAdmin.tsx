@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 import { Avatar, Card, CardActionArea, CardContent, Stack, Typography } from '@mui/material';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
 import ChartIcon from '@mui/icons-material/BarChartRounded';
@@ -10,8 +10,8 @@ import DriverIcon from '@mui/icons-material/GroupsRounded';
 import HomeIcon from '@mui/icons-material/HomeRounded';
 import TaxiIcon from '@mui/icons-material/LocalTaxiRounded';
 
-import { SupportTable } from '@/libs/ui';
 import { colors } from '@/libs/ui';
+import CustomPieChart from './PieChart';
 
 const Main = styled('main')(({ theme }) => ({
   margin: '0 5rem',
@@ -23,14 +23,6 @@ const Main = styled('main')(({ theme }) => ({
   },
 }));
 
-const headCells = [
-  { key: 'status', numeric: false, disablePadding: false, label: 'Thời gian' },
-  { key: 'status', numeric: false, disablePadding: false, label: 'Mã cuốc' },
-  { key: 'address', numeric: false, disablePadding: false, label: 'Loại cuốc' },
-  { key: 'name', numeric: false, disablePadding: false, label: 'Route' },
-  { key: 'action', numeric: false, disablePadding: false, label: 'Trạng thái' },
-];
-
 const options = [
   { icon: <HomeIcon color='primary' />, label: 'Trang chủ' },
   { icon: <ChartIcon color='primary' />, label: 'Thống kê' },
@@ -38,19 +30,25 @@ const options = [
   { icon: <TaxiIcon color='primary' />, label: 'Quản lý cuốc xe' },
 ];
 
-export default function HomePage() {
+function ChartsOverviewDemo() {
+  return (
+    <BarChart
+      series={[{ data: [35, 44, 24, 34] }]}
+      height={290}
+      xAxis={[{ data: ['Q1', 'Q2', 'Q3', 'Q4'], scaleType: 'band' }]}
+      margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
+    />
+  );
+}
+
+export default function HomeAdmin() {
   return (
     <Main>
       <Stack direction='row' alignItems='center' justifyContent='space-between' sx={{ my: 2 }}>
-        <Stack direction='row' alignItems='center'>
-          <Typography variant='h4' fontWeight='bold'>
-            Cổng quản lý &emsp;
-          </Typography>
-          <Button sx={{ ml: 2 }} component={Link} href='/home/create-ride'>
-            Tạo cuốc xe mới
-          </Button>
-        </Stack>
-        <Avatar />
+        <Typography variant='h4' fontWeight='bold'>
+          Cổng quản lý &emsp;
+        </Typography>
+        <Avatar component={Link} href='/profile' />
       </Stack>
       <Stack direction='row' justifyContent='center' flexWrap='wrap' sx={{ width: '100%' }}>
         {options.map((option, index) => (
@@ -72,18 +70,9 @@ export default function HomePage() {
           </Card>
         ))}
       </Stack>
-      <section>
-        <Typography variant='h6' fontWeight='bold'>
-          Các cuốc xe hiện tại
-        </Typography>
-        <SupportTable headCells={headCells} state='empty' />
-      </section>
-      <section>
-        <Typography variant='h6' fontWeight='bold'>
-          Các tài xế online
-        </Typography>
-        <SupportTable headCells={headCells} state='empty' />
-      </section>
+
+      <ChartsOverviewDemo />
+      <CustomPieChart />
     </Main>
   );
 }

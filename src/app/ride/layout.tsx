@@ -19,7 +19,7 @@ export default function HomeLayout({
   return (
     <>
       {role == 'driver' ? driver : user}
-      {role == 'user' ? <Navigation /> : null}
+      {role == 'passenger' ? <Navigation /> : null}
       {children}
     </>
   );

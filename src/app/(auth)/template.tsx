@@ -33,13 +33,13 @@ const Main = styled('main')(({ theme }) => ({
     maxWidth: '100vh',
   },
 }));
-export default function AuthLayout({ children }: { children: ReactNode }) {
-  const localStorage = useLocalStorage('idToken');
+export default function AuthTemplate({ children }: { children: ReactNode }) {
+  const localStorage = useLocalStorage();
   const router = useRouter();
 
   useEffect(() => {
-    if (localStorage.getStoredValue()) {
-      router.push('/home');
+    if (localStorage.getStoredValue('idToken')) {
+      router.push('/');
     }
   }, []);
 

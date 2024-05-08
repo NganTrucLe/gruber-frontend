@@ -235,15 +235,8 @@ let theme = createTheme({
     MuiChip: {
       variants: [
         {
-          props: { variant: 'outlined' },
-          style: {
-            background: colors.green[50],
-          },
-        },
-        {
           props: { color: 'default' },
           style: {
-            color: colors.green[500],
             background: colors.neutral[25],
           },
         },

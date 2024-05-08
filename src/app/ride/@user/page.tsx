@@ -5,7 +5,6 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
 
 import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import Fab from '@mui/material/Fab';
 import Paper from '@mui/material/Paper';
@@ -16,9 +15,11 @@ import Typography from '@mui/material/Typography';
 import PhoneIcon from '@mui/icons-material/LocalPhoneRounded';
 import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 
-import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
-import { cancelRide, currentRideUser } from '@/libs/query';
-import { Directions, Marker } from '@/libs/ui';
+import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
+import { BookingStatus } from '@/libs/enum';
+import { currentRide, updateRideStatus } from '@/libs/query';
+// import { Directions, LoadingButton, Marker } from '@/libs/ui';
+import { LoadingButton } from '@/libs/ui';
 import { formatPrice } from '@/libs/utils';
 
 const Main = styled('main')({
@@ -35,37 +36,51 @@ const MapContainer = styled(APIProvider)({
 
 export default function RidePage() {
   const router = useRouter();
+  const toast = useToast();
   const position = useCurrentLocation();
   const { apiKey, mapId } = useGoogleMapAPI();
   const { data, status } = useQuery({
     queryKey: ['current-ride'],
-    queryFn: currentRideUser,
+    queryFn: currentRide,
   });
-  const { mutate } = useMutation({
-    mutationFn: async () => {
-      if (status == 'success') await cancelRide(data?.id);
-    },
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => updateRideStatus(data.id, BookingStatus.CANCELLED),
     onSuccess: () => {
-      alert('Hủy chuyến thành công');
-      router.push('/home');
+      toast.setToast('success', 'Hủy chuyến thành công');
+      router.push('/');
     },
-    onError: () => {
-      alert('Hủy chuyến thất bại');
+    onError: (error) => {
+      toast.setToast('error', 'Hủy chuyến thất bại', error.message);
     },
   });
 
-  const handleCancelRide = () => {
-    mutate();
+  const getText = (status: BookingStatus) => {
+    switch (status) {
+      case BookingStatus.PENDING:
+        return 'Đang tìm tài xế';
+      case BookingStatus.ACCEPTED:
+        return 'Tài xế đang đến chỗ bạn';
+      case BookingStatus.ARRIVED:
+        return 'Vui lòng thanh toán cho tài xế';
+      default:
+        return 'Đang đến địa điểm';
+    }
   };
 
   if (status === 'pending') {
-    return <Typography variant='h6'>Đang tải...</Typography>;
+    return <Typography variant='h6'>Loading...</Typography>;
   }
   if (status === 'error') {
+    router.push('/');
     return <Typography variant='h6'>Không thể tải dữ liệu</Typography>;
   }
   if (status === 'success') {
-    const { booking_route, driver, price, payment_method } = data;
+    if (data === null) {
+      router.push('/');
+      return <Typography variant='h6'>Bạn đang không có chuyến đi hiện tại nào</Typography>;
+    }
+    const { price, payment_method, status } = data;
     return (
       <Main>
         {apiKey === undefined ? (
@@ -81,13 +96,13 @@ export default function RidePage() {
               <AdvancedMarker position={position} title={'Vị trí của tôi'}>
                 <MyLocationIcon fontSize='large' sx={{ color: 'blue' }} color='primary' />
               </AdvancedMarker>
-              <Marker position={booking_route.pick_up.location} type='pickup' role='passenger' />
+              {/* <Marker position={booking_route.pick_up.location} type='pickup' role='passenger' />
               <Marker position={booking_route.destination.location} type='destination' role='passenger' />
               <Directions
                 origin={booking_route.pick_up.location}
                 destination={booking_route.destination.location}
                 mainDirection
-              />
+              /> */}
             </Map>
             <Paper
               sx={{
@@ -107,35 +122,41 @@ export default function RidePage() {
               <Stack direction='row' spacing={2}>
                 <Avatar />
                 <div>
-                  <Typography fontWeight='bold'>{driver.name}</Typography>
-                  <Typography color='primary'>Tài xế đang đến chỗ bạn</Typography>
+                  {/* <Typography fontWeight='bold'>{driver.name}</Typography> */}
+                  <Typography color='primary'>{getText(status)}</Typography>
                 </div>
               </Stack>
               <div>
-                <Typography>
+                {/* <Typography>
                   <b>Biển số: </b>
                   {driver.plate}
                 </Typography>
                 <Typography>
                   <b>Mô tả: </b>
                   {driver.description}
-                </Typography>
+                </Typography> */}
               </div>
               <Divider />
               <div>
                 <Typography>Điểm đón:</Typography>
-                <Typography variant='h6'>{booking_route.pick_up.formatted_address}</Typography>
+                {/* <Typography variant='h6'>{booking_route.pick_up.formatted_address}</Typography> */}
                 <Typography>Điểm đến:</Typography>
-                <Typography variant='h6'>{booking_route.destination.formatted_address}</Typography>
+                {/* <Typography variant='h6'>{booking_route.destination.formatted_address}</Typography> */}
                 <Typography variant='body1'>
                   {formatPrice(price)} &ensp; {payment_method == 'cash' ? 'Tiền mặt' : 'Thẻ ngân hàng'}
                 </Typography>
               </div>
               <Divider />
               <Stack direction='row' spacing={2} sx={{ width: '100%' }}>
-                <Button size='large' sx={{ flexGrow: 1 }} variant='outlined' onClick={handleCancelRide}>
+                <LoadingButton
+                  loading={isPending}
+                  size='large'
+                  sx={{ flexGrow: 1 }}
+                  disabled={data.status !== BookingStatus.PENDING}
+                  variant={data.status == BookingStatus.PENDING ? 'outlined' : 'contained'}
+                  onClick={() => mutate()}>
                   Hủy chuyến
-                </Button>
+                </LoadingButton>
                 <Fab size='medium' sx={{ boxShadow: 0 }} color='primary'>
                   <PhoneIcon />
                 </Fab>

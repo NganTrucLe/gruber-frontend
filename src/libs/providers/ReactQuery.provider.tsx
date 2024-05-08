@@ -8,7 +8,8 @@ function makeQueryClient() {
     defaultOptions: {
       queries: {
         refetchOnWindowFocus: false,
-        staleTime: 5, // 5 minutes, right now set 5 seconds for debuging
+        staleTime: 10 * 1000,
+        refetchInterval: 60 * 1000,
       },
       mutations: {
         onError: (error: Error) => {

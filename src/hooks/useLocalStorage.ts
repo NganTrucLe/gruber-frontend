@@ -5,9 +5,9 @@
  * @param key String key to store in local storage
  * @returns
  */
-function useLocalStorage(key: string) {
+function useLocalStorage() {
   // Get from local storage by key
-  const getStoredValue = () => {
+  const getStoredValue = (key: string): any => {
     try {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : null;
@@ -18,7 +18,7 @@ function useLocalStorage(key: string) {
   };
 
   // Persist the new value to localStorage
-  const setStoredValue = (value: any) => {
+  const setStoredValue = (key: string, value: any) => {
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
@@ -26,7 +26,7 @@ function useLocalStorage(key: string) {
     }
   };
 
-  const deleteStoredValue = () => {
+  const removeStoredValue = (key: string) => {
     try {
       window.localStorage.removeItem(key);
     } catch (error) {
@@ -34,7 +34,7 @@ function useLocalStorage(key: string) {
     }
   };
 
-  return { getStoredValue, setStoredValue, deleteStoredValue };
+  return { getStoredValue, setStoredValue, removeStoredValue };
 }
 
 export default useLocalStorage;

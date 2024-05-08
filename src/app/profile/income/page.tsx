@@ -48,7 +48,7 @@ export default function IncomePage() {
 
   return (
     <Main>
-      <TopAppBar title='Thu nhập' backHref='/home' />
+      <TopAppBar title='Thu nhập' backHref='/' />
       <Stack alignItems={'center'}>
         <Tabs sx={{ mb: 2, width: 'fit-content' }} value={1}>
           <Tab

@@ -1,61 +1,113 @@
-// const ENDPOINT = process.env.NEXT_PUBLIC_NAME_API_ENDPOINT;
+const ENDPOINT = process.env.NEXT_PUBLIC_NAME_API_ENDPOINT;
 
-import { sleep } from '@/libs/utils';
+import { getStoredValue, sleep } from '@/libs/utils';
 import { Vehicle } from '../enum';
-// import { useLocalStorage } from '@/hooks';
 
-export const createRideFromStaffFull = async (request: {
+export const createRideFromStaffFull = async (data: {
   name: string;
   phone: string;
   vehicle_type: Vehicle;
+  driver_id: string;
   booking_route: {
-    pick_up: number;
-    destination: number;
+    pick_up: string;
+    destination: string;
   };
 }) => {
-  // const { getStoredValue: idToken } = useLocalStorage('idToken');
-  // const response = await fetch(`${ENDPOINT}/rides`, {
-  //     method: 'POST',
-  //     headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: `Bearer ${idToken}`,
-  //     },
-  //     body: JSON.stringify(data),
-  // });
-  // const { statusCode } = await response.json();
-  await sleep(5000);
-  const { statusCode } = { statusCode: 200 };
-  console.log(request);
+  console.log(getStoredValue('id'));
+  const request = {
+    ...data,
+    user_id: getStoredValue('user_id'),
+  };
+  const response = await fetch(`${ENDPOINT}/bookings`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${getStoredValue('idToken')}`,
+    },
+    body: JSON.stringify(request),
+  });
+  const { statusCode } = await response.json();
   if (statusCode === 200) {
     return { message: 'Tạo chuyến đi thành công' };
-  } else {
-    return { message: 'Tạo chuyến đi không thành công' };
-  }
+  } else throw new Error('Tạo chuyến đi không thành công');
 };
 
-export const createRideFromStaffHalf = async (request: {
-  name: string;
-  phone: string;
-  vehicle_type: Vehicle;
-  booking_route: {
-    pick_up: number | string;
-    destination: number | string;
-  };
-}) => {
-  // const response = await fetch(`${ENDPOINT}/rides`, {
-  //     method: 'POST',
-  //     headers: {
-  //         'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(data),
-  // });
-  // const { statusCode } = await response.json();
+export const currentRides = async () => {
   await sleep(5000);
-  const { statusCode } = { statusCode: 200 };
-  console.log(request);
-  if (statusCode === 200) {
-    return { message: 'Tạo chuyến đi thành công' };
-  } else {
-    return { message: 'Tạo chuyến đi không thành công' };
-  }
+
+  const rows = [
+    {
+      id: 1,
+      pick_up: 'Snow',
+      payment_method: 'card',
+      status: 'pending',
+      vehicle_type: 'motorbike',
+      destination: 'Winterfell',
+    },
+    {
+      id: 2,
+      pick_up: 'Lannister',
+      payment_method: 'cash',
+      status: 'picked_up',
+      vehicle_type: 'car4',
+      destination: 'Casterly Rock',
+    },
+    {
+      id: 3,
+      pick_up: 'Lannister',
+      payment_method: 'cash',
+      status: 'picked_up',
+      vehicle_type: 'car7',
+      destination: `King's Landing`,
+    },
+    {
+      id: 4,
+      pick_up: 'Stark',
+      payment_method: 'card',
+      status: 'in_progress',
+      vehicle_type: 'motorbike',
+      destination: 'The Wall',
+    },
+    {
+      id: 5,
+      pick_up: 'Targaryen',
+      payment_method: 'card',
+      status: null,
+      vehicle_type: 'car4',
+      destination: 'Dragonstone',
+    },
+    {
+      id: 6,
+      pick_up: 'Melisandre',
+      payment_method: 'card',
+      status: 'in_progress',
+      vehicle_type: 'car7',
+      destination: 'Asshai',
+    },
+    {
+      id: 7,
+      pick_up: 'Clifford',
+      payment_method: 'card',
+      status: 'pending',
+      vehicle_type: 'motorbike',
+      destination: 'Pawnee',
+    },
+    {
+      id: 8,
+      pick_up: 'Frances',
+      payment_method: 'card',
+      status: 'in_progress',
+      vehicle_type: 'car4',
+      destination: 'New York',
+    },
+    {
+      id: 9,
+      pick_up: 'Roxie',
+      payment_method: 'card',
+      status: 'picked_up',
+      vehicle_type: 'car7',
+      destination: 'Los Angeles',
+    },
+  ];
+  return rows;
 };

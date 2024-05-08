@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { Field, Form, Formik } from 'formik';
 
@@ -10,24 +11,29 @@ import Typography from '@mui/material/Typography';
 
 import EmailIcon from '@mui/icons-material/EmailRounded';
 
-import { useLocalStorage } from '@/hooks';
+import { useLocalStorage, useToast } from '@/hooks';
 import { login } from '@/libs/query';
 import { colors, InputLayout, LoadingButton, PasswordInput } from '@/libs/ui';
 import { LoginSchema } from '@/libs/validations';
 
 export default function LogIn() {
+  const router = useRouter();
   const [form, setForm] = useState(false);
-  const localStorage = useLocalStorage('idToken');
+  const localStorage = useLocalStorage();
+  const { setToast } = useToast();
 
   const { mutate, isPending } = useMutation({
     mutationFn: (request: { email: string; password: string }) => login(request),
     mutationKey: ['login'],
     onSuccess: ({ data }) => {
-      localStorage.setStoredValue(data.idToken);
-      alert('Đăng nhập thành công');
+      localStorage.setStoredValue('idToken', data.idToken);
+      localStorage.setStoredValue('user_id', '211257ce-96cc-4788-b587-3d28f27c1040');
+      localStorage.setStoredValue('role', 'driver');
+      setToast('success', 'Đăng nhập thành công');
+      router.push('/');
     },
     onError: (error) => {
-      alert('Đăng nhập thất bại ' + error.message);
+      setToast('success', `Đăng nhập thất bại`, error.message);
     },
   });
   return (

@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRecoilState } from 'recoil';
 
@@ -16,13 +17,15 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRightRounded';
 
 import { colors, Main, Navigation, TopAppBar } from '@/libs/ui';
 import { roleState } from '@/recoils';
+import LogOutDialog from './LogOutDialog';
 
 export default function ProfilePage() {
   const [role] = useRecoilState(roleState);
+  const [logOutDialog, setLogOutDialog] = useState(false);
 
   return (
     <Main>
-      {role == 'user' ? <Navigation /> : <TopAppBar title='Tài khoản' backHref='/home' />}
+      {role == 'passenger' ? <Navigation /> : <TopAppBar title='Tài khoản' backHref='/' />}
       <Paper
         sx={{ bgcolor: colors.green[800], p: 2, mb: 2, ml: '-1rem', mr: '-1rem' }}
         component={Stack}
@@ -86,9 +89,10 @@ export default function ProfilePage() {
           <ChevronRightIcon sx={{ color: 'text.secondary' }} />
         </ListItemButton>
       </List>
-      <ListItemButton>
+      <ListItemButton onClick={() => setLogOutDialog(true)}>
         <ListItemText primaryTypographyProps={{ color: 'error' }}>Đăng xuất</ListItemText>
       </ListItemButton>
+      <LogOutDialog open={logOutDialog} onClose={() => setLogOutDialog(false)} />
     </Main>
   );
 }
