@@ -1,7 +1,6 @@
 export * from './Countdown';
 export * from './Directions';
 export * from './Dropdown';
-export * from './EnhancedTable';
 export * from './InputLayout';
 export * from './Loading';
 export * from './LoadingButton';
@@ -11,7 +10,6 @@ export * from './OTPInput';
 export * from './PasswordInput';
 export * from './PlaceAutocomplete';
 export * from './styles';
-export * from './SupportTable';
 export * from './TopAppBar';
 export * from './TransactionCard';
 export * from './Uploader';
