@@ -29,7 +29,7 @@ export function Navigation() {
         onChange={(_event, newValue) => {
           if (newValue === 0) {
             // Navigate to the ride page
-            router.push('/home');
+            router.push('/');
           } else if (newValue === 1) {
             // Navigate to the history page
             router.push('/histories');

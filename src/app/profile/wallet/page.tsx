@@ -27,7 +27,7 @@ export default function WalletPage() {
   // TODO: Fetch data from server
   return (
     <Main>
-      <TopAppBar title='Ví' backHref='/home' />
+      <TopAppBar title='Ví' backHref='/' />
       <Stack alignItems={'center'}>
         <Tabs sx={{ mb: 2, width: 'fit-content' }} value={2}>
           <Tab

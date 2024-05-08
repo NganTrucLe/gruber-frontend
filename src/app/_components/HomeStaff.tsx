@@ -38,7 +38,7 @@ export default function HomePage() {
           <Typography variant='h4' fontWeight='bold'>
             Cổng quản lý &emsp;
           </Typography>
-          <Button sx={{ ml: 2 }} component={Link} href='/home/create-ride'>
+          <Button sx={{ ml: 2 }} component={Link} href='/create-ride'>
             Tạo cuốc xe mới
           </Button>
         </Stack>

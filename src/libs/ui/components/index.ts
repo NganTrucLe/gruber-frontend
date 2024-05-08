@@ -10,6 +10,7 @@ export * from './OTPInput';
 export * from './PasswordInput';
 export * from './PlaceAutocomplete';
 export * from './styles';
+export * from './Toast';
 export * from './TopAppBar';
 export * from './TransactionCard';
 export * from './Uploader';

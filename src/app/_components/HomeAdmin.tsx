@@ -41,7 +41,7 @@ function ChartsOverviewDemo() {
   );
 }
 
-export default function HomePage() {
+export default function HomeAdmin() {
   return (
     <Main>
       <Stack direction='row' alignItems='center' justifyContent='space-between' sx={{ my: 2 }}>

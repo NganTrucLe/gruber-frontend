@@ -13,6 +13,7 @@ export const createRideFromStaffFull = async (data: {
     destination: string;
   };
 }) => {
+  console.log(getStoredValue('id'));
   const request = {
     ...data,
     user_id: getStoredValue('user_id'),
@@ -28,9 +29,7 @@ export const createRideFromStaffFull = async (data: {
   const { statusCode } = await response.json();
   if (statusCode === 200) {
     return { message: 'Tạo chuyến đi thành công' };
-  } else {
-    return { message: 'Tạo chuyến đi không thành công' };
-  }
+  } else throw new Error('Tạo chuyến đi không thành công');
 };
 
 export const currentRides = async () => {

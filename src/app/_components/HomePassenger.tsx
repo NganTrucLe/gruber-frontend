@@ -18,7 +18,7 @@ import CardIcon from '@mui/icons-material/CreditCardRounded';
 import CashIcon from '@mui/icons-material/LocalAtmRounded';
 import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 
-import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
+import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
 import { PaymentMethod, Vehicle } from '@/libs/enum';
 import { bookARide } from '@/libs/query';
 import { Directions, LoadingButton, Marker } from '@/libs/ui';
@@ -43,6 +43,7 @@ export default function HomePage() {
   const router = useRouter();
   const [method, setMethod] = useState<PaymentMethod>('card');
   const [vehicle, setVehicle] = useState<Vehicle>('motorbike');
+  const { setToast } = useToast();
   const [open, setOpen] = useState(false);
   const [pickup, setPickup] = useState<google.maps.places.PlaceResult | null>(null);
   const [destination, setDestination] = useState<google.maps.places.PlaceResult | null>(null);
@@ -51,11 +52,11 @@ export default function HomePage() {
   const { mutate, isPending } = useMutation({
     mutationFn: bookARide,
     onSuccess: () => {
-      alert('Đặt xe thành công');
+      setToast('success', 'Đăng xe thành công');
       router.push('/ride');
     },
     onError: (error) => {
-      alert('Đặt xe thất bại ' + error.message);
+      setToast('error', 'Đặt xe thất bại', error.message);
     },
   });
 

@@ -25,7 +25,7 @@ export default function ProfilePage() {
 
   return (
     <Main>
-      {role == 'user' ? <Navigation /> : <TopAppBar title='Tài khoản' backHref='/home' />}
+      {role == 'passenger' ? <Navigation /> : <TopAppBar title='Tài khoản' backHref='/' />}
       <Paper
         sx={{ bgcolor: colors.green[800], p: 2, mb: 2, ml: '-1rem', mr: '-1rem' }}
         component={Stack}
