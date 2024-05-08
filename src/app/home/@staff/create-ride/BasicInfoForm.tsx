@@ -1,44 +1,98 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Field, Form, Formik } from 'formik';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import _ from 'lodash';
 
 import Alert from '@mui/material/Alert';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 
 import { Vehicle } from '@/libs/enum';
-import LocationRecords from '@/libs/mocks/locationRecords.json';
-import { createRideFromStaffHalf } from '@/libs/query';
-import { InputLayout, LoadingButton } from '@/libs/ui';
+import { ILocationRecord, IRideFromStaff } from '@/libs/interfaces';
+import { searchLocations } from '@/libs/query';
+import { InputLayout } from '@/libs/ui';
 import { RideFromStaffSchema } from '@/libs/validations';
-import { destinationState, fullRideState, pickupState, PlaceOptionType } from './atom';
 
-const filter = createFilterOptions<PlaceOptionType>();
 interface AlertProps {
   severity: 'error' | 'warning';
   message: string;
 }
 
-function CustomAutoComplete({ onSelect }: { onSelect: (value: PlaceOptionType | null) => void }) {
-  const [value, setValue] = useState<PlaceOptionType | null>(null);
+function CustomAutoComplete({ onSelect }: { onSelect: (value: ILocationRecord | null) => void }) {
+  const [value, setValue] = useState<ILocationRecord | null>(null);
+  const [options, setOptions] = useState<ILocationRecord[]>([]);
+  const [keyword, setKeyWord] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  const {
+    data: filterLocations,
+    status: filterLocationsStatus,
+    refetch,
+  } = useQuery({
+    queryKey: ['locations', keyword],
+    queryFn: () => searchLocations(keyword),
+  });
+
+  useEffect(() => {
+    if (filterLocationsStatus == 'success') {
+      setLoading(false);
+      setOptions(
+        filterLocations.map(
+          (loc: {
+            coordinate: { coordinates: [number, number] };
+            id: string;
+            formattedAddress: string;
+            name: string;
+          }) => {
+            const [lng, lat] = loc.coordinate.coordinates;
+            return {
+              id: loc.id,
+              formattedAddress: loc.formattedAddress,
+              name: loc.name,
+              location: {
+                lat,
+                lng,
+              },
+            };
+          }
+        )
+      );
+    }
+  }, [filterLocationsStatus, filterLocations]);
 
   return (
     <Autocomplete
       id='free-solo-demo'
-      freeSolo
       value={value}
+      freeSolo
+      loading={loading}
+      onInputChange={(_e, input) => {
+        setKeyWord(input);
+        setLoading(true);
+        refetch();
+        if (input == '') {
+          setValue(null);
+          onSelect(null);
+        } else {
+          setValue({
+            formattedAddress: input,
+          });
+          onSelect({
+            formattedAddress: input,
+          });
+        }
+      }}
       onChange={(_event, newValue) => {
         if (typeof newValue === 'string') {
           setValue({
-            formatted_address: newValue,
+            formattedAddress: newValue,
           });
           onSelect({
-            formatted_address: newValue,
+            formattedAddress: newValue,
           });
         } else {
           setValue(newValue);
@@ -49,18 +103,14 @@ function CustomAutoComplete({ onSelect }: { onSelect: (value: PlaceOptionType | 
         if (typeof option === 'string') {
           return option;
         }
-        return option.formatted_address;
+        return option.formattedAddress;
       }}
       renderOption={(props, option) => (
-        <li {...props} key={option.id}>
-          {option.formatted_address}
+        <li {...props} key={option.id} style={{ textOverflow: 'ellipsis' }}>
+          <b>{option.name}</b> {option.formattedAddress}
         </li>
       )}
-      filterOptions={(options, params) => {
-        const filtered = filter(options, params);
-        return filtered;
-      }}
-      options={LocationRecords}
+      options={options}
       componentsProps={{
         paper: {
           elevation: 2,
@@ -82,50 +132,41 @@ function CustomAutoComplete({ onSelect }: { onSelect: (value: PlaceOptionType | 
   );
 }
 
-export default function BasicInfoForm() {
-  const [pickup, setPickup] = useRecoilState(pickupState);
-  const [destination, setDestination] = useRecoilState(destinationState);
-  const setFullRide = useSetRecoilState(fullRideState);
+export default function BasicInfoForm({
+  pickupState,
+  destinationState,
+  rideState,
+  onSubmit,
+}: {
+  pickupState: [ILocationRecord | null, Dispatch<SetStateAction<ILocationRecord | null>>];
+  destinationState: [ILocationRecord | null, Dispatch<SetStateAction<ILocationRecord | null>>];
+  rideState: [IRideFromStaff | null, Dispatch<SetStateAction<IRideFromStaff | null>>];
+  onSubmit: () => void;
+}) {
+  const [pickup, setPickup] = pickupState;
+  const [destination, setDestination] = destinationState;
+  const [_ride, setRide] = rideState;
   const [alertMessage, setAlertMessage] = useState<AlertProps | null>({
     severity: 'error',
     message: 'Vui lòng chọn cả điểm đón và điểm trả khách',
   });
 
-  const { mutate, isPending } = useMutation({
-    mutationFn: createRideFromStaffHalf,
-    onError: (error) => {
-      console.error(error);
-    },
-    onSuccess: (data) => {
-      alert(data);
-    },
-  });
-
   const handleSubmit = ({ name, phone, vehicle_type }: { name: string; phone: string; vehicle_type: Vehicle }) => {
     if (pickup && destination) {
-      if (pickup.id && destination.id) {
-        const request = {
-          name,
-          phone,
-          vehicle_type,
-          booking_route: {
-            pick_up: pickup.id,
-            destination: destination.id,
-          },
-        };
-        setFullRide(request);
-      } else {
-        const request = {
-          name,
-          phone,
-          vehicle_type,
-          booking_route: {
-            pick_up: pickup?.id || pickup?.formatted_address,
-            destination: destination?.id || destination?.formatted_address,
-          },
-        };
-        mutate(request);
+      const request = {
+        name,
+        phone,
+        vehicle_type,
+        booking_route: {},
+      };
+      if (pickup.id) {
+        _.set(request, 'booking_route.pick_up', pickup.id);
       }
+      if (destination.id) {
+        _.set(request, 'booking_route.destination', destination.id);
+      }
+      setRide(request);
+      onSubmit();
     }
   };
 
@@ -149,7 +190,11 @@ export default function BasicInfoForm() {
 
   return (
     <>
-      {alertMessage && <Alert severity={alertMessage.severity}>{alertMessage.message}</Alert>}
+      {alertMessage && (
+        <Alert severity={alertMessage.severity} sx={{ mb: 2 }}>
+          {alertMessage.message}
+        </Alert>
+      )}
       <Formik
         initialValues={{
           name: '',
@@ -160,7 +205,7 @@ export default function BasicInfoForm() {
         onSubmit={handleSubmit}>
         {({ errors, touched }) => {
           return (
-            <Form>
+            <Form id='create-ride-step-1'>
               <Stack spacing={2} sx={{ width: '100%', flexGrow: 1 }}>
                 <InputLayout label='Điểm đón khách'>
                   <CustomAutoComplete onSelect={(value) => setPickup(value)} />
@@ -190,9 +235,6 @@ export default function BasicInfoForm() {
                     <MenuItem value='car7'>Xe 7 chỗ</MenuItem>
                   </Field>
                 </InputLayout>
-                <LoadingButton type='submit' loading={isPending}>
-                  {!alertMessage ? 'Điều phối' : 'Tạo cuốc'}
-                </LoadingButton>
               </Stack>
             </Form>
           );

@@ -7,3 +7,7 @@ export const RideFromStaffSchema = yup.object().shape({
   phone: Schema.phone.required('Số điện thoại không được để trống'),
   vehicle_type: yup.string().required('Loại xe không được để trống').oneOf(['motorbike', 'car4', 'car7']),
 });
+
+export const NewLocationRecordSchema = yup.object().shape({
+  formattedAddress: yup.string().required('Địa chỉ không được để trống'),
+});

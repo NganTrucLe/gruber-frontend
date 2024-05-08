@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
 
-import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -22,7 +21,7 @@ import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
 import { PaymentMethod, Vehicle } from '@/libs/enum';
 import { bookARide } from '@/libs/query';
-import { Directions, Marker } from '@/libs/ui';
+import { Directions, LoadingButton, Marker } from '@/libs/ui';
 import { calculateDistance } from '@/libs/utils';
 import SearchGroup from './SearchGroup';
 import SelectMethodDialog from './SelectMethodDialog';
@@ -42,18 +41,18 @@ const MapContainer = styled(APIProvider)({
 
 export default function HomePage() {
   const router = useRouter();
-  const [method, setMethod] = useState<PaymentMethod>('bank');
+  const [method, setMethod] = useState<PaymentMethod>('card');
   const [vehicle, setVehicle] = useState<Vehicle>('motorbike');
   const [open, setOpen] = useState(false);
   const [pickup, setPickup] = useState<google.maps.places.PlaceResult | null>(null);
   const [destination, setDestination] = useState<google.maps.places.PlaceResult | null>(null);
   const position = useCurrentLocation();
   const { apiKey, mapId } = useGoogleMapAPI();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: bookARide,
     onSuccess: () => {
-      router.push('/ride');
       alert('Đặt xe thành công');
+      router.push('/ride');
     },
     onError: (error) => {
       alert('Đặt xe thất bại ' + error.message);
@@ -67,17 +66,22 @@ export default function HomePage() {
 
   const handleBook = () => {
     const data = {
-      userId: '1',
-      pickup: {
-        formatted_address: pickup?.formatted_address,
-        location: pickup?.geometry?.location,
+      booking_route: {
+        pick_up: {
+          formattedAddress: pickup?.formatted_address,
+          lat: pickup?.geometry?.location ? pickup.geometry.location.lat() : null,
+          lng: pickup?.geometry?.location ? pickup.geometry.location.lng() : null,
+          name: pickup?.name,
+        },
+        destination: {
+          formattedAddress: destination?.formatted_address,
+          lat: destination?.geometry?.location ? destination.geometry.location.lat() : null,
+          lng: destination?.geometry?.location ? destination.geometry.location.lng() : null,
+          name: destination?.name,
+        },
       },
-      destination: {
-        formatted_address: destination?.formatted_address,
-        location: destination?.geometry?.location,
-      },
-      vehicle,
-      method,
+      vehicle_type: vehicle,
+      payment_method: method,
     };
     mutate(data);
   };
@@ -164,7 +168,9 @@ export default function HomePage() {
                 <ChevronRightIcon />
               </ListItemIcon>
             </ListItemButton>
-            <Button onClick={handleBook}>Đặt ngay</Button>
+            <LoadingButton loading={isPending} onClick={handleBook}>
+              Đặt ngay
+            </LoadingButton>
             <SelectMethodDialog open={open} selectedValue={method} onClose={handleClose} />
           </Stack>
         </Paper>

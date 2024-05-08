@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
+import { BarChart } from '@mui/x-charts/BarChart';
 
 import { Avatar, Card, CardActionArea, CardContent, Stack, Typography } from '@mui/material';
-import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 
 import ChartIcon from '@mui/icons-material/BarChartRounded';
@@ -11,7 +11,7 @@ import HomeIcon from '@mui/icons-material/HomeRounded';
 import TaxiIcon from '@mui/icons-material/LocalTaxiRounded';
 
 import { colors } from '@/libs/ui';
-import CurrentRides from './CurrentRides';
+import CustomPieChart from './PieChart';
 
 const Main = styled('main')(({ theme }) => ({
   margin: '0 5rem',
@@ -30,18 +30,24 @@ const options = [
   { icon: <TaxiIcon color='primary' />, label: 'Quản lý cuốc xe' },
 ];
 
+function ChartsOverviewDemo() {
+  return (
+    <BarChart
+      series={[{ data: [35, 44, 24, 34] }]}
+      height={290}
+      xAxis={[{ data: ['Q1', 'Q2', 'Q3', 'Q4'], scaleType: 'band' }]}
+      margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
+    />
+  );
+}
+
 export default function HomePage() {
   return (
     <Main>
       <Stack direction='row' alignItems='center' justifyContent='space-between' sx={{ my: 2 }}>
-        <Stack direction='row' alignItems='center'>
-          <Typography variant='h4' fontWeight='bold'>
-            Cổng quản lý &emsp;
-          </Typography>
-          <Button sx={{ ml: 2 }} component={Link} href='/home/create-ride'>
-            Tạo cuốc xe mới
-          </Button>
-        </Stack>
+        <Typography variant='h4' fontWeight='bold'>
+          Cổng quản lý &emsp;
+        </Typography>
         <Avatar component={Link} href='/profile' />
       </Stack>
       <Stack direction='row' justifyContent='center' flexWrap='wrap' sx={{ width: '100%' }}>
@@ -64,18 +70,9 @@ export default function HomePage() {
           </Card>
         ))}
       </Stack>
-      <section>
-        <Typography variant='h6' fontWeight='bold' gutterBottom>
-          Các cuốc xe hiện tại
-        </Typography>
-        <CurrentRides />
-      </section>
-      {/* <section>
-        <Typography variant='h6' fontWeight='bold'>
-          Các tài xế online
-        </Typography>
-        <SupportTable headCells={headCells} state='empty' />
-      </section> */}
+
+      <ChartsOverviewDemo />
+      <CustomPieChart />
     </Main>
   );
 }

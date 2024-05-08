@@ -34,7 +34,7 @@ export default function SignUp() {
       router.push('/log-in');
     },
     onError: (error) => {
-      alert('Đăng nhập thất bại ' + error.message);
+      alert(error.message);
     },
   });
 

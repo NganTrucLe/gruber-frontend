@@ -1,6 +1,8 @@
 import { atom } from 'recoil';
 
-export const roleState = atom({
+export type RoleType = 'staff' | 'driver' | 'user' | 'admin';
+
+export const roleState = atom<RoleType>({
   key: 'roleState',
   default: 'staff',
 });

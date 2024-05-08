@@ -8,7 +8,6 @@ export const login = async (request: { email: string; password: string }) => {
     body: JSON.stringify(request),
   });
   const { statusCode, data } = await response.json();
-  console.log(statusCode, data);
   if (statusCode === 200) {
     return { message: 'Đăng nhập thành công', data };
   } else {
@@ -24,10 +23,10 @@ export const register = async (request: { email: string; password: string; role:
     },
     body: JSON.stringify(request),
   });
-  const { statusCode } = await response.json();
+  const { statusCode, message } = await response.json();
   if (statusCode === 200) {
     return { message: 'Đăng ký thành công' };
   } else {
-    return { message: 'Email đã tồn tại' };
+    throw new Error(message);
   }
 };
