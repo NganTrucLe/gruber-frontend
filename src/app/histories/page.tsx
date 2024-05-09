@@ -32,11 +32,14 @@ const Main = styled('main')(({ theme }) => ({
 }));
 
 export default function HistoryPage() {
-  const { data, status } = useQuery({
+  const { data, status, isFetching } = useQuery({
     queryKey: ['histories'],
     queryFn: getBookingHistory,
-    initialData: [],
   });
+
+  if (isFetching) {
+    return <p>Loading...</p>;
+  }
   if (status === 'error') {
     return <Typography variant='h6'>Đã có lỗi xảy ra</Typography>;
   }

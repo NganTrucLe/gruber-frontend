@@ -54,6 +54,7 @@ const Main = styled('main')(({ theme }) => ({
     maxWidth: '100vh',
   },
 }));
+
 export default function Home() {
   const [role] = useRecoilState(roleState);
 

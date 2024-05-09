@@ -27,8 +27,7 @@ export default function LogIn() {
     mutationKey: ['login'],
     onSuccess: ({ data }) => {
       localStorage.setStoredValue('idToken', data.idToken);
-      localStorage.setStoredValue('user_id', '211257ce-96cc-4788-b587-3d28f27c1040');
-      localStorage.setStoredValue('role', 'driver');
+      localStorage.setStoredValue('user_id', data.id);
       setToast('success', 'Đăng nhập thành công');
       router.push('/');
     },
