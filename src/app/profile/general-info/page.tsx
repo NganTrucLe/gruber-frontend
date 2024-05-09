@@ -10,7 +10,7 @@ import Stack from '@mui/material/Stack';
 import { getProfile, updateInfo } from '@/libs/query';
 import { InputLayout, Main, TopAppBar, LoadingButton } from '@/libs/ui';
 import { useToast } from '@/hooks';
-import { GeneralInfo } from '@/libs/validations';
+import { GeneralInfoSchema } from '@/libs/validations';
 
 interface Info {
   fullName: string | '';
@@ -69,7 +69,7 @@ export default function GeneroInfoPage() {
                 md: '50%',
               },
             }}>
-            <Formik initialValues={info} onSubmit={mutate} validationSchema={GeneralInfo} enableReinitialize>
+            <Formik initialValues={info} onSubmit={mutate} validationSchema={GeneralInfoSchema} enableReinitialize>
               {({ errors, touched }) => {
                 return (
                   <Form>

@@ -3,5 +3,6 @@
 // For example, the collection name is users, so the file name is users.ts.
 export * from './auth';
 export * from './bookings';
+export * from './commons';
 export * from './locations';
 export * from './users';
