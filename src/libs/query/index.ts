@@ -4,5 +4,4 @@
 export * from './auth';
 export * from './bookings';
 export * from './locations';
-export * from './ride';
 export * from './users';

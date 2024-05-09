@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
@@ -22,7 +22,7 @@ import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
 import { PaymentMethod, Vehicle } from '@/libs/enum';
 import { bookARide } from '@/libs/query';
 import { Directions, LoadingButton, Marker } from '@/libs/ui';
-import { calculateDistance } from '@/libs/utils';
+import { calculateDistance, formatDistance } from '@/libs/utils';
 import SearchGroup from './SearchGroup';
 import SelectMethodDialog from './SelectMethodDialog';
 import SelectVehicle from './SelectVehicle';
@@ -43,12 +43,19 @@ export default function HomePage() {
   const router = useRouter();
   const [method, setMethod] = useState<PaymentMethod>('card');
   const [vehicle, setVehicle] = useState<Vehicle>('motorbike');
+  const [distance, setDistance] = useState<number>(0);
   const { setToast } = useToast();
   const [open, setOpen] = useState(false);
   const [pickup, setPickup] = useState<google.maps.places.PlaceResult | null>(null);
   const [destination, setDestination] = useState<google.maps.places.PlaceResult | null>(null);
   const position = useCurrentLocation();
   const { apiKey, mapId } = useGoogleMapAPI();
+  useEffect(() => {
+    if (pickup?.geometry?.location && destination?.geometry?.location) {
+      setDistance(calculateDistance(pickup.geometry.location, destination.geometry.location));
+    }
+  }, [pickup, destination]);
+
   const { mutate, isPending } = useMutation({
     mutationFn: bookARide,
     onSuccess: () => {
@@ -138,16 +145,8 @@ export default function HomePage() {
             },
           }}>
           <Stack justifyContent='space-between'>
-            <Typography>
-              Khoảng cách: {calculateDistance(pickup.geometry.location, destination.geometry.location)}
-            </Typography>
-            <SelectVehicle
-              priceMotorbike={10000}
-              priceCar4={20000}
-              priceCar7={30000}
-              onSelectVehicle={(vehicle) => setVehicle(vehicle)}
-              selected={vehicle}
-            />
+            <Typography>Khoảng cách: {formatDistance(distance)}</Typography>
+            <SelectVehicle distance={distance} onSelectVehicle={(vehicle) => setVehicle(vehicle)} selected={vehicle} />
             <Divider />
             <ListItemButton onClick={() => setOpen(true)}>
               {method == 'cash' ? (

@@ -15,7 +15,8 @@ export default function LogOutDialog(props: DialogProps) {
 
   const handleLogOut = () => {
     localStorage.removeStoredValue('idToken');
-    localStorage.removeStoredValue('localId');
+    localStorage.removeStoredValue('user_id');
+    localStorage.removeStoredValue('role');
     router.push('/log-in');
   };
 

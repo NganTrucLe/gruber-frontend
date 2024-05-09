@@ -41,7 +41,7 @@ const Progress = styled('div')(({ color, theme }) => ({
     height: '100%',
     width: '0%',
     backgroundColor: theme.palette.background.paper,
-    animation: 'progress 5s linear forwards',
+    animation: 'progress 3s linear forwards',
     '@keyframes progress': {
       '100%': {
         width: '100%',
@@ -55,7 +55,7 @@ export function Toast() {
   return (
     <Snackbar
       open={toast.open}
-      autoHideDuration={5000}
+      autoHideDuration={3000}
       onClose={() => setToast({ ...toast, open: false })}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       TransitionComponent={SlideTransition}>

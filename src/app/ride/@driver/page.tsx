@@ -18,7 +18,7 @@ import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
 import { BookingStatus } from '@/libs/enum';
 import { currentRide, updateRideStatus } from '@/libs/query';
 import { LoadingButton } from '@/libs/ui';
-// import { colors, Directions, Marker } from '@/libs/ui';
+import { Marker } from '@/libs/ui';
 import { formatPrice } from '@/libs/utils';
 import SuccessfulDialog from './SuccessfulDialog';
 
@@ -106,7 +106,7 @@ export default function RidePage() {
     return <p>Loading...</p>;
   } else if (status == 'error') {
     router.push('/');
-  } else if (status == 'success') {
+  } else if (status == 'success' && booking) {
     return (
       <Main>
         {apiKey === undefined ? (
@@ -122,9 +122,9 @@ export default function RidePage() {
               <AdvancedMarker position={position} title={'Vị trí của tôi'}>
                 <MyLocationIcon fontSize='large' sx={{ color: 'blue' }} color='primary' />
               </AdvancedMarker>
-              {/* <Marker position={booking.pickup.geometry.location} type='pickup' role='driver'/>
-              <Marker position={booking.destination.geometry.location} type='destination' role='driver'/>
-              <Directions origin={position} destination={booking.booking_route.pick_up.coordinate} />
+              <Marker position={booking.booking_route.pick_up.location} type='pickup' role='driver' />
+              <Marker position={booking.booking_route.destination.location} type='destination' role='driver' />
+              {/* <Directions origin={position} destination={booking.booking_route.pick_up.coordinate} />
               <Directions
                 origin={booking.pickup.geometry.location}
                 destination={booking.destination.geometry.location}
@@ -163,9 +163,9 @@ export default function RidePage() {
               <div>
                 <Typography variant='body1'>{booking.name}</Typography>
                 <Typography variant='body1'>{booking.phone}</Typography>
-                {/* <Typography variant='h6'>
-                  <b>{booking.pickup.name}</b>: {booking.pickup.formatted_address}
-                </Typography> */}
+                <Typography variant='h6'>
+                  <b>{booking.booking_route.pick_up.name}</b>: {booking.booking_route.pick_up.formatted_address}
+                </Typography>
                 <Typography variant='body1'>
                   {formatPrice(booking.price)} &ensp; {booking.payment_method == 'cash' ? 'Tiền mặt' : 'Thẻ ngân hàng'}
                 </Typography>

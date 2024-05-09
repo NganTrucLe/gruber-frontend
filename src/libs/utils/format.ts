@@ -13,6 +13,12 @@ export function hiddenEmail(email: string) {
   return `${hiddenUsername}@${domain}`;
 }
 
+export function formatDistance(distance: number) {
+  if (distance < 1000) {
+    return `${distance.toFixed(0)} m`;
+  } else return `${(distance / 1000).toFixed(2)} km`;
+}
+
 export function formatPrice(price: number | string) {
   if (typeof price === 'string')
     return parseFloat(price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
