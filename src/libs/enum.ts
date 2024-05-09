@@ -28,5 +28,6 @@ export enum Role {
 export enum StatusCode {
   SUCCESS = 200,
   BADREQUEST = 400,
+  UNAUTHORIZED = 401,
   NOTFOUND = 404,
 }

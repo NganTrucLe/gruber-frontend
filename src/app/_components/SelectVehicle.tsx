@@ -1,4 +1,5 @@
 'use client';
+import { useQuery } from '@tanstack/react-query';
 import React from 'react';
 
 import List from '@mui/material/List';
@@ -12,38 +13,45 @@ import MotorbikeIcon from '@mui/icons-material/TwoWheelerRounded';
 
 import { Vehicle } from '@/libs/enum';
 import { formatPrice } from '@/libs/utils';
+import { getVehiclePrice } from '@/libs/query';
 
 interface SelectVehicleProps {
-  priceMotorbike: number;
-  priceCar4: number;
-  priceCar7: number;
+  distance: number;
   onSelectVehicle: (vehicle: Vehicle) => void;
   selected: Vehicle;
 }
 
 export default function SelectVehicle(props: SelectVehicleProps) {
-  const { priceMotorbike, priceCar4, priceCar7, onSelectVehicle, selected } = props;
+  const { distance, onSelectVehicle, selected } = props;
+  const { data: price, status } = useQuery({
+    queryKey: ['price', distance],
+    queryFn: () => getVehiclePrice(Math.round(distance)),
+  });
 
-  const vehicles = [
-    { type: 'motorbike', name: 'Xe máy', icon: <MotorbikeIcon />, price: priceMotorbike },
-    { type: 'car4', name: 'Xe 4 chỗ', icon: <CarIcon />, price: priceCar4 },
-    { type: 'car7', name: 'Xe 7 chỗ', icon: <CarIcon />, price: priceCar7 },
-  ];
+  if (status === 'success') {
+    const vehicles = [
+      { type: 'motorbike', name: 'Xe máy', icon: <MotorbikeIcon />, price: price.motorbike },
+      { type: 'car4', name: 'Xe 4 chỗ', icon: <CarIcon />, price: price.car4 },
+      { type: 'car7', name: 'Xe 7 chỗ', icon: <CarIcon />, price: price.car7 },
+    ];
 
-  return (
-    <List>
-      {vehicles.map((vehicle) => (
-        <ListItemButton
-          key={vehicle.type}
-          onClick={() => onSelectVehicle(vehicle.type as Vehicle)}
-          selected={selected === vehicle.type}>
-          <ListItemIcon sx={{ minWidth: '2rem' }}>{vehicle.icon}</ListItemIcon>
-          <Stack width='100%' direction='row' justifyContent='space-between'>
-            <Typography fontWeight='600'>{vehicle.name}</Typography>
-            <Typography fontWeight='600'>{formatPrice(vehicle.price)}</Typography>
-          </Stack>
-        </ListItemButton>
-      ))}
-    </List>
-  );
+    return (
+      <List>
+        {vehicles.map((vehicle) => (
+          <ListItemButton
+            key={vehicle.type}
+            onClick={() => onSelectVehicle(vehicle.type as Vehicle)}
+            selected={selected === vehicle.type}>
+            <ListItemIcon sx={{ minWidth: '2rem' }}>{vehicle.icon}</ListItemIcon>
+            <Stack width='100%' direction='row' justifyContent='space-between'>
+              <Typography fontWeight='600'>{vehicle.name}</Typography>
+              <Typography fontWeight='600'>{formatPrice(vehicle.price)}</Typography>
+            </Stack>
+          </ListItemButton>
+        ))}
+      </List>
+    );
+  } else {
+    return <Typography>Đang tải giá...</Typography>;
+  }
 }

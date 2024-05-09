@@ -22,7 +22,7 @@ import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
 import { Vehicle } from '@/libs/enum';
 import { ILocationRecord, IRideFromStaff } from '@/libs/interfaces';
-import { createRideFromStaffFull } from '@/libs/query';
+import { createARide } from '@/libs/query';
 import { LoadingButton, Marker } from '@/libs/ui';
 import { roleState } from '@/recoils';
 import BasicInfoForm from './BasicInfoForm';
@@ -31,12 +31,13 @@ const DynamicChooseDriver = dynamic(() => import('./ChooseDriver'), {
   ssr: false,
   loading: () => <p>Loading...</p>,
 });
+
 const DynamicLocate = dynamic(() => import('./Locate'), {
   ssr: false,
   loading: () => <p>Loading...</p>,
 });
 
-export default function CreateRidePage() {
+export default function CreateARidePage() {
   const { setToast } = useToast();
   const [role] = useRecoilState(roleState);
   const router = useRouter();
@@ -51,7 +52,7 @@ export default function CreateRidePage() {
   const [step, setStep] = useState(0);
 
   const { mutate, isPending } = useMutation({
-    mutationFn: createRideFromStaffFull,
+    mutationFn: createARide,
     onError: (error) => {
       setToast('error', 'Đặt xe thất bại', error.message);
     },
@@ -61,7 +62,7 @@ export default function CreateRidePage() {
     },
   });
 
-  const handleCreateRide = () => {
+  const handlecreateARide = () => {
     if (newRide && newRide.driver_id && newRide.booking_route.pick_up && newRide.booking_route.destination) {
       mutate({
         ...newRide,
@@ -113,14 +114,14 @@ export default function CreateRidePage() {
         <DynamicChooseDriver pickupState={pickupState} destinationState={destinationState} rideState={newRideState} />
       ),
       button: (
-        <LoadingButton loading={isPending} onClick={handleCreateRide} sx={{ mt: 2 }}>
+        <LoadingButton loading={isPending} onClick={handlecreateARide} sx={{ mt: 2 }}>
           Tạo cuốc
         </LoadingButton>
       ),
     },
   ];
 
-  if (role !== 'passenger') return null;
+  if (role !== 'staff') return null;
   return (
     <main>
       <Stack direction='row' spacing={2}>

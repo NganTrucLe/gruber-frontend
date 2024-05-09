@@ -48,7 +48,7 @@ export default function IncomePage() {
 
   return (
     <Main>
-      <TopAppBar title='Thu nhập' backHref='/' />
+      <TopAppBar title='Thu nhập' backHref='/profile' />
       <Stack alignItems={'center'}>
         <Tabs sx={{ mb: 2, width: 'fit-content' }} value={1}>
           <Tab
@@ -59,7 +59,14 @@ export default function IncomePage() {
             LinkComponent={Link}
             href='/income'
           />
-          <Tab label='Ví' value={2} icon={<WalletIcon />} sx={{ width: '10rem' }} LinkComponent={Link} href='/wallet' />
+          <Tab
+            label='Ví'
+            value={2}
+            icon={<WalletIcon />}
+            sx={{ width: '10rem' }}
+            LinkComponent={Link}
+            href='/profile/wallet'
+          />
         </Tabs>
       </Stack>
       <ScrollContainer>

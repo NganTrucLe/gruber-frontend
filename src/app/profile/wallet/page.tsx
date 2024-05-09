@@ -27,7 +27,7 @@ export default function WalletPage() {
   // TODO: Fetch data from server
   return (
     <Main>
-      <TopAppBar title='Ví' backHref='/' />
+      <TopAppBar title='Ví' backHref='/profile' />
       <Stack alignItems={'center'}>
         <Tabs sx={{ mb: 2, width: 'fit-content' }} value={2}>
           <Tab
@@ -38,7 +38,14 @@ export default function WalletPage() {
             LinkComponent={Link}
             href='/income'
           />
-          <Tab label='Ví' value={2} icon={<WalletIcon />} sx={{ width: '10rem' }} LinkComponent={Link} href='/wallet' />
+          <Tab
+            label='Ví'
+            value={2}
+            icon={<WalletIcon />}
+            sx={{ width: '10rem' }}
+            LinkComponent={Link}
+            href='/profile/wallet'
+          />
         </Tabs>
       </Stack>
       <Card variant='outlined' sx={{ mt: 2 }}>

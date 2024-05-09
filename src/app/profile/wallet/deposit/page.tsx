@@ -62,7 +62,7 @@ export default function WithdrawPage() {
 
   return (
     <Main>
-      <TopAppBar title='Nạp tiền' backHref='/wallet' />
+      <TopAppBar title='Nạp tiền' backHref='/profile/wallet' />
       <Stack direction='row' alignItems={'center'} sx={{ mb: 2 }}>
         <TransactionCard
           variant='send'

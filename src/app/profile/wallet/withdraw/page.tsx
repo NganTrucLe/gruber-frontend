@@ -55,7 +55,7 @@ export default function WithdrawPage() {
 
   return (
     <Main>
-      <TopAppBar title='Chuyển khoản' backHref='/wallet' />
+      <TopAppBar title='Chuyển khoản' backHref='/profile/wallet' />
       <Stack direction='row' alignItems={'center'} sx={{ mb: 2 }}>
         <TransactionCard variant='send' primary='Ví tín dụng' secondary={formatPrice(inputValue)} />
         <LinearProgress color='success' sx={{ flexGrow: 1 }} />
