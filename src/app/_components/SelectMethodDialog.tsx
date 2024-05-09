@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -13,6 +14,8 @@ import CardIcon from '@mui/icons-material/CreditCardRounded';
 import CashIcon from '@mui/icons-material/LocalAtmRounded';
 
 import { PaymentMethod } from '@/libs/enum';
+import { getCardByUser } from '@/libs/query';
+import { getStoredValue } from '@/libs/utils';
 
 interface SelectMethodDialogProps {
   open: boolean;
@@ -21,6 +24,11 @@ interface SelectMethodDialogProps {
 }
 export default function SelectMethodDialog(props: SelectMethodDialogProps) {
   const { onClose, selectedValue, open } = props;
+  const userId = getStoredValue('user_id');
+  const { data, status } = useQuery({
+    queryKey: ['card', userId],
+    queryFn: getCardByUser,
+  });
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -44,14 +52,16 @@ export default function SelectMethodDialog(props: SelectMethodDialogProps) {
             <ListItemText primary='Tiền mặt' />
           </ListItemButton>
         </ListItem>
-        <ListItem>
-          <ListItemButton onClick={() => handleListItemClick('card')} selected={selectedValue === 'card'}>
-            <ListItemIcon>
-              <CardIcon />
-            </ListItemIcon>
-            <ListItemText primary='Thẻ' />
-          </ListItemButton>
-        </ListItem>
+        {status === 'success' && data && (
+          <ListItem>
+            <ListItemButton onClick={() => handleListItemClick('card')} selected={selectedValue === 'card'}>
+              <ListItemIcon>
+                <CardIcon />
+              </ListItemIcon>
+              <ListItemText primary='Thẻ' secondary={data.bankName} />
+            </ListItemButton>
+          </ListItem>
+        )}
       </List>
     </Dialog>
   );

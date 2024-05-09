@@ -13,6 +13,7 @@ export interface Toast {
   title: string;
   message?: string;
 }
+
 export const toastState = atom<Toast>({
   key: 'toastState',
   default: {
