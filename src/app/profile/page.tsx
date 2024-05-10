@@ -15,9 +15,8 @@ import Typography from '@mui/material/Typography';
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRightRounded';
 
-import { colors, Main, Navigation, TopAppBar } from '@/libs/ui';
+import { colors, Main, Navigation, TopAppBar, LogOutDialog } from '@/libs/ui';
 import { roleState } from '@/recoils';
-import LogOutDialog from './LogOutDialog';
 import { useQuery } from '@tanstack/react-query';
 import { getProfile } from '@/libs/query';
 

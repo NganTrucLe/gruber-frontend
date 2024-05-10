@@ -14,3 +14,4 @@ export * from './Toast';
 export * from './TopAppBar';
 export * from './TransactionCard';
 export * from './Uploader';
+export * from './LogOutDialog';
