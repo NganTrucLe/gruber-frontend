@@ -1,4 +1,6 @@
+'use client';
 import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 
 import Backdrop, { BackdropProps } from '@mui/material/Backdrop';
 import Fab from '@mui/material/Fab';
@@ -10,14 +12,15 @@ import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 
 import { formatPrice } from '@/libs/utils';
+import { getWalletsByDriverId } from '@/libs/query';
+import { CircularProgress } from '@mui/material';
 
 export default function IncomeOptions(props: BackdropProps) {
   const router = useRouter();
-  // TODO: Replace with data fetch from the server
-  const wallet = {
-    income: 100000,
-    balance: 50000,
-  };
+  const { data, status } = useQuery({
+    queryKey: ['wallets'],
+    queryFn: getWalletsByDriverId,
+  });
 
   return (
     <Backdrop sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1, alignItems: 'flex-start' }} {...props}>
@@ -48,12 +51,12 @@ export default function IncomeOptions(props: BackdropProps) {
             },
           }}
           onClick={() => {
-            router.push('/income');
+            router.push('/profile/income');
           }}>
           <div>
             <Typography>Thu nhập</Typography>
             <Typography variant='h5' fontWeight='bold'>
-              {formatPrice(wallet.income)}
+              {formatPrice(500000)}
             </Typography>
           </div>
           <ChevronRightRounded />
@@ -71,13 +74,17 @@ export default function IncomeOptions(props: BackdropProps) {
             },
           }}
           onClick={() => {
-            router.push('/wallet');
+            router.push('/profile/wallet');
           }}>
           <div>
             <Typography>Ví</Typography>
-            <Typography variant='h5' fontWeight='bold'>
-              {formatPrice(wallet.balance)}
-            </Typography>
+            {status === 'success' ? (
+              <Typography variant='h5' fontWeight='bold'>
+                {formatPrice(data.creditWallet.amount)}
+              </Typography>
+            ) : (
+              <CircularProgress />
+            )}
           </div>
           <ChevronRightRounded />
         </Paper>

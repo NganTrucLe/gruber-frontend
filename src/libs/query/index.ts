@@ -6,3 +6,4 @@ export * from './bookings';
 export * from './commons';
 export * from './locations';
 export * from './users';
+export * from './drivers';

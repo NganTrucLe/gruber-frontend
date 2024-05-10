@@ -9,14 +9,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 
 import { useLocalStorage } from '@/hooks';
 
-export default function LogOutDialog(props: DialogProps) {
+export function LogOutDialog(props: DialogProps) {
   const router = useRouter();
   const localStorage = useLocalStorage();
 
   const handleLogOut = () => {
     localStorage.removeStoredValue('idToken');
-    localStorage.removeStoredValue('user_id');
-    localStorage.removeStoredValue('role');
+    localStorage.removeStoredValue('localId');
     router.push('/log-in');
   };
 
