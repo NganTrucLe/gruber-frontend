@@ -31,3 +31,13 @@ export enum StatusCode {
   UNAUTHORIZED = 401,
   NOTFOUND = 404,
 }
+
+export enum WalletType {
+  CASH = 'cash',
+  CREDIT = 'credit',
+}
+
+export enum TransactionType {
+  DEPOSIT = 'deposit',
+  WITHDRAW = 'withdraw',
+}
