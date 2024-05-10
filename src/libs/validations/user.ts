@@ -15,3 +15,9 @@ export const CardInfoSchema = yup.object().shape({
   cardCvv: yup.string().required('Vui lòng nhập mã CVV').length(3, 'Mã CVV phải có 3 chữ số'),
   phone: Schema.phone.required('Vui lòng nhập số điện thoại'),
 });
+
+export const IdentitySchema = yup.object().shape({
+  type: yup.string().oneOf(['motorbike', 'car4', 'car7']).required('Vui lòng chọn loại xe'),
+  plate: yup.string().required('Vui lòng nhập biển số xe'),
+  description: yup.string().required('Vui lòng nhập tên mẫu xe'),
+});
