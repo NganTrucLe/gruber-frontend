@@ -59,9 +59,17 @@ export default function BankCardPage() {
               md: '50%',
             },
           }}>
-          {status === 'success' && data && (
+          {status === 'success' && (
             <Formik
-              initialValues={data as Vehicle}
+              initialValues={
+                Boolean(data)
+                  ? (data as Vehicle)
+                  : ({
+                      type: VehicleType.MOTORBIKE,
+                      plate: '',
+                      description: '',
+                    } as Vehicle)
+              }
               validationSchema={IdentitySchema}
               onSubmit={(values) => {
                 mutate(values);

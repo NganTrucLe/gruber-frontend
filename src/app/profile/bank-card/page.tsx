@@ -142,7 +142,6 @@ export default function BankCardPage() {
                 addCardMutation.mutate({ ownerId: userId, ...values });
               }}>
               {({ touched, errors }) => {
-                console.log(errors);
                 return (
                   <Form>
                     <Stack spacing={2}>

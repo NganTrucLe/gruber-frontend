@@ -19,12 +19,18 @@ import { Main, TopAppBar } from '@/libs/ui';
 import { formatPrice } from '@/libs/utils';
 import BankWalletDialog from './BankWalletDialog';
 import CashWalletDialog from './CashWalletDialog';
+import { getWalletsByDriverId } from '@/libs/query';
+import { useQuery } from '@tanstack/react-query';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function WalletPage() {
   const [dialogBank, setDialogBank] = useState(false);
   const [dialogCash, setDialogCash] = useState(false);
+  const { data, status } = useQuery({
+    queryKey: ['wallets'],
+    queryFn: getWalletsByDriverId,
+  });
 
-  // TODO: Fetch data from server
   return (
     <Main>
       <TopAppBar title='Ví' backHref='/profile' />
@@ -48,36 +54,46 @@ export default function WalletPage() {
           />
         </Tabs>
       </Stack>
-      <Card variant='outlined' sx={{ mt: 2 }}>
-        <CardActionArea sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => setDialogBank(true)}>
-          <CardContent>
-            <Typography variant='caption' color='text.secondary'>
-              Ví tín dụng
-            </Typography>
-            <Typography variant='h5' fontWeight='bold'>
-              {formatPrice(500000)}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <ChevronRightIcon sx={{ mr: 2 }} />
-          </CardActions>
-        </CardActionArea>
-      </Card>
-      <Card variant='outlined' sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-        <CardActionArea sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => setDialogCash(true)}>
-          <CardContent>
-            <Typography variant='caption' color='text.secondary'>
-              Ví tiền mặt
-            </Typography>
-            <Typography variant='h5' fontWeight='bold'>
-              {formatPrice(500000)}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <ChevronRightIcon sx={{ mr: 2 }} />
-          </CardActions>
-        </CardActionArea>
-      </Card>
+      <Stack sx={{ flexDirection: { sx: 'row', md: 'column' } }} spacing={2}>
+        <Card variant='outlined' sx={{ mt: 2 }}>
+          <CardActionArea sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => setDialogBank(true)}>
+            <CardContent>
+              <Typography variant='caption' color='text.secondary'>
+                Ví tín dụng
+              </Typography>
+              {status === 'pending' ? (
+                <CircularProgress />
+              ) : (
+                <Typography variant='h5' fontWeight='bold'>
+                  {formatPrice(data.creditWallet.amount)}
+                </Typography>
+              )}
+            </CardContent>
+            <CardActions>
+              <ChevronRightIcon sx={{ mr: 2 }} />
+            </CardActions>
+          </CardActionArea>
+        </Card>
+        <Card variant='outlined' sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+          <CardActionArea sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => setDialogCash(true)}>
+            <CardContent>
+              <Typography variant='caption' color='text.secondary'>
+                Ví tiền mặt
+              </Typography>
+              {status === 'pending' ? (
+                <CircularProgress />
+              ) : (
+                <Typography variant='h5' fontWeight='bold'>
+                  {formatPrice(data.cashWallet.amount)}
+                </Typography>
+              )}
+            </CardContent>
+            <CardActions>
+              <ChevronRightIcon sx={{ mr: 2 }} />
+            </CardActions>
+          </CardActionArea>
+        </Card>
+      </Stack>
       <BankWalletDialog open={dialogBank} onClose={() => setDialogBank(false)} />
       <CashWalletDialog open={dialogCash} onClose={() => setDialogCash(false)} />
     </Main>

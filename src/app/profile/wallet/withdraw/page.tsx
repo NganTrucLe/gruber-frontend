@@ -1,16 +1,22 @@
 'use client';
 import { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Input from '@mui/material/Input';
 import LinearProgress from '@mui/material/LinearProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 import Stack from '@mui/material/Stack';
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
-import { Main, TopAppBar, TransactionCard } from '@/libs/ui';
-import { colors } from '@/libs/ui';
+import { colors, Main, TopAppBar, TransactionCard, LoadingButton } from '@/libs/ui';
+import { getStoredValue } from '@/libs/utils';
+import { useToast } from '@/hooks';
+import { getWalletsByDriverId, getCardByUser, withdraw } from '@/libs/query';
+import { WalletState } from '../atom';
+import { WalletType } from '@/libs/enum';
 
 const StyledInput = styled(Input)({
   fontSize: '32px',
@@ -32,10 +38,32 @@ const Chips = styled('div')({
   marginRight: '-1rem',
   marginLeft: '-1rem',
 });
+
 export default function WithdrawPage() {
+  const userId = getStoredValue('user_id');
+  const walletState = useRecoilValue(WalletState);
+  const { setToast } = useToast();
   const [inputValue, setInputValue] = useState(0);
   const options = [200000, 500000, 1000000, 2000000];
-  const balance = 567000;
+  const queryClient = useQueryClient();
+  const { data: wallet, status: walletStatus } = useQuery({
+    queryKey: ['wallets'],
+    queryFn: getWalletsByDriverId,
+  });
+  const { data: card, status: cardStatus } = useQuery({
+    queryKey: ['card', userId],
+    queryFn: getCardByUser,
+  });
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => withdraw(walletState, inputValue),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['wallets'], data);
+      setToast('success', 'Rút tiền thành công');
+    },
+    onError: (error) => {
+      setToast('error', error.message);
+    },
+  });
 
   function formatPrice(value: number) {
     return new Intl.NumberFormat('vi-VN', {
@@ -44,59 +72,74 @@ export default function WithdrawPage() {
     }).format(value);
   }
 
-  // TODO: Trigger to backend
   const handleWithdraw = () => {
-    if (inputValue > balance) {
-      alert('Số dư không đủ');
-    } else {
-      alert('Rút tiền thành công');
-    }
+    if (inputValue > (walletState == WalletType.CASH ? wallet?.cashWallet?.amount : wallet?.creditWallet?.amount)) {
+      setToast('error', 'Số dư không đủ');
+    } else mutate();
   };
 
   return (
     <Main>
       <TopAppBar title='Chuyển khoản' backHref='/profile/wallet' />
-      <Stack direction='row' alignItems={'center'} sx={{ mb: 2 }}>
-        <TransactionCard variant='send' primary='Ví tín dụng' secondary={formatPrice(inputValue)} />
-        <LinearProgress color='success' sx={{ flexGrow: 1 }} />
-        <TransactionCard variant='receive' primary='ACB' secondary='18921857' />
-      </Stack>
-      <Stack alignItems={'center'} sx={{ width: '100%' }}>
-        <Typography>
-          Số dư ví tín dụng: <b>{formatPrice(balance)}</b>
-        </Typography>
-        <StyledInput
-          type='number'
-          placeholder={formatPrice(0)}
-          value={inputValue}
-          onChange={(e) => setInputValue(Number(e.target.value))}
-          sx={{
-            my: 4,
-            width: {
-              xs: '100%',
-              sm: '20rem',
-            },
-          }}
-          autoFocus
-        />
-        <Chips>
-          <Stack direction='row' mb={2} spacing={1} justifyContent={'center'}>
-            {options.map((option) => (
-              <Chip key={option} label={formatPrice(option)} onClick={() => setInputValue(option)} />
-            ))}
+      {walletStatus == 'pending' ? (
+        <CircularProgress />
+      ) : (
+        <>
+          <Stack direction='row' alignItems={'center'} sx={{ mb: 2 }}>
+            <TransactionCard
+              variant='send'
+              primary={walletState == WalletType.CASH ? 'Ví tín dụng' : 'Ví tiền mặt'}
+              secondary={formatPrice(inputValue)}
+            />
+            <LinearProgress color='success' sx={{ flexGrow: 1 }} />
+            {cardStatus !== 'success' || card == null ? (
+              <CircularProgress />
+            ) : (
+              <TransactionCard variant='receive' primary={card.bankName} secondary={card.cardAccountName} />
+            )}
           </Stack>
-        </Chips>
-        <Button
-          sx={{
-            width: {
-              xs: '100%',
-              sm: '20rem',
-            },
-          }}
-          onClick={handleWithdraw}>
-          Xác nhận
-        </Button>
-      </Stack>
+          <Stack alignItems={'center'} sx={{ width: '100%' }}>
+            <Typography>
+              Số dư&ensp;{walletState == WalletType.CASH ? 'Ví tín dụng' : 'Ví tiền mặt'}:{' '}
+              <b>
+                {formatPrice(walletState == WalletType.CASH ? wallet.cashWallet.amount : wallet.creditWallet.amount)}
+              </b>
+            </Typography>
+            <StyledInput
+              type='number'
+              placeholder={formatPrice(0)}
+              value={inputValue}
+              onChange={(e) => setInputValue(Number(e.target.value))}
+              sx={{
+                my: 4,
+                width: {
+                  xs: '100%',
+                  sm: '20rem',
+                },
+              }}
+              autoFocus
+            />
+            <Chips>
+              <Stack direction='row' mb={2} spacing={1} justifyContent={'center'}>
+                {options.map((option) => (
+                  <Chip key={option} label={formatPrice(option)} onClick={() => setInputValue(option)} />
+                ))}
+              </Stack>
+            </Chips>
+            <LoadingButton
+              sx={{
+                width: {
+                  xs: '100%',
+                  sm: '20rem',
+                },
+              }}
+              loading={isPending}
+              onClick={handleWithdraw}>
+              Xác nhận
+            </LoadingButton>
+          </Stack>
+        </>
+      )}
     </Main>
   );
 }
