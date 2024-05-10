@@ -113,3 +113,27 @@ export const lockDriver = async (user_id: string): Promise<{ message: string; da
     throw error;
   }
 };
+
+export const createVehicle = async (user_id: string, request: any) => {
+  const response = await fetch(`${ENDPOINT}/users/${user_id}/vehicle`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(request),
+  });
+  const { statusCode, data, message } = await response.json();
+  if (statusCode === StatusCode.SUCCESS) {
+    return data;
+  }
+  throw new Error(message);
+};
+
+export const getVehicleByDriverId = async (driverId: string) => {
+  const response = await fetch(`${ENDPOINT}/users/${driverId}/vehicle`);
+  const { data, statusCode, message } = await response.json();
+  if (statusCode === StatusCode.SUCCESS) {
+    return data;
+  }
+  throw new Error(message);
+};

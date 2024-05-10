@@ -64,7 +64,7 @@ export default function ProfilePage() {
             <ChevronRightIcon sx={{ color: 'text.secondary' }} />
           </ListItemButton>
           <Divider />
-          <ListItemButton>
+          <ListItemButton component={Link} href='/profile/identity'>
             <ListItemText>Xác thực định danh</ListItemText>
             <ChevronRightIcon sx={{ color: 'text.secondary' }} />
           </ListItemButton>
