@@ -1,7 +1,8 @@
 'use client';
 import { useEffect } from 'react';
 import { ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { useRouter, usePathname } from 'next/navigation';
 
 import { styled } from '@mui/material/styles';
 
@@ -23,25 +24,25 @@ const Main = styled('main')(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     position: 'fixed',
-    height: 'fit-content',
-    top: 'auto',
-    left: '0',
-    right: '0',
-    transform: 'none',
-    bottom: 0,
-    borderRadius: '1rem 1rem 0 0',
-    maxWidth: '100vh',
+    maxWidth: '100vw',
   },
 }));
+
 export default function AuthTemplate({ children }: { children: ReactNode }) {
   const localStorage = useLocalStorage();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (localStorage.getStoredValue('idToken')) {
+    if (localStorage.getStoredValue('idToken') && pathname !== '/log-in' && pathname !== '/sign-up') {
       router.push('/');
     }
   }, []);
 
-  return <Main>{children}</Main>;
+  return (
+    <Main>
+      <Image src='/Gruber.svg' alt='logo' width={250} height={200} />
+      {children}
+    </Main>
+  );
 }

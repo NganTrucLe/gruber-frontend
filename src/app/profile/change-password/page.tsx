@@ -53,7 +53,7 @@ export default function ChangePasswordPage() {
             }}>
             <Form>
               <Stack spacing={2}>
-                <InputLayout label='Mật khẩu hiện tại' required>
+                <InputLayout label='Mật khẩu hiện tại'>
                   <Field name='current_password'>
                     {({ field, form }: { field: any; form: any }) => {
                       const handleChange = (e: any) => {
@@ -63,7 +63,7 @@ export default function ChangePasswordPage() {
                     }}
                   </Field>
                 </InputLayout>
-                <InputLayout label='Mật khẩu mới' required>
+                <InputLayout label='Mật khẩu mới'>
                   <Field name='new_password'>
                     {({ field, form }: { field: any; form: any }) => {
                       const handleChange = (e: any) => {
@@ -73,7 +73,7 @@ export default function ChangePasswordPage() {
                     }}
                   </Field>
                 </InputLayout>
-                <InputLayout label='Nhập lại mật khẩu' required>
+                <InputLayout label='Nhập lại mật khẩu'>
                   <Field name='confirm_password'>
                     {({ field, form }: { field: any; form: any }) => {
                       const handleChange = (e: any) => {

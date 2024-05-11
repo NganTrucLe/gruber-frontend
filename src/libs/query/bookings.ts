@@ -1,18 +1,17 @@
 const ENDPOINT = process.env.NEXT_PUBLIC_NAME_API_ENDPOINT;
-import histories from '@/libs/mocks/historiesAll.json';
-import history from '@/libs/mocks/historySingle.json';
+import { doGet } from './methods';
 import { getStoredValue } from '@/libs/utils';
 import { sleep } from '@/libs/utils';
 import { BookingStatus, StatusCode, Vehicle } from '@/libs/enum';
 
 export const getBookingHistory = async () => {
-  await sleep(5000);
-  return histories;
+  const userId = getStoredValue('user_id');
+  return await doGet(`/users/${userId}/bookings`);
 };
 
 export const getBookingById = async (_id: string) => {
-  await sleep(5000);
-  return history;
+  const userId = getStoredValue('user_id');
+  return await doGet(`/users/${userId}/bookings/${_id}`);
 };
 
 export const updateRating = async (id: string, rating: number): Promise<{ id: string; rating: number }> => {
@@ -180,10 +179,5 @@ export const currentRides = async () => {
 };
 
 export const getVehiclePrice = async (distance: number) => {
-  const response = await fetch(`${ENDPOINT}/bookings/price?distance=${distance}`);
-  const { statusCode, data, message } = await response.json();
-  if (statusCode === StatusCode.SUCCESS) {
-    return data;
-  }
-  throw new Error(message);
+  return await doGet(`/bookings/price?distance=${distance}`);
 };

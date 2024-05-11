@@ -19,6 +19,7 @@ import { colors, Main, Navigation, TopAppBar, LogOutDialog } from '@/libs/ui';
 import { roleState } from '@/recoils';
 import { useQuery } from '@tanstack/react-query';
 import { getProfile } from '@/libs/query';
+import { Role } from '@/libs/enum';
 
 export default function ProfilePage() {
   const [role] = useRecoilState(roleState);
@@ -45,13 +46,15 @@ export default function ProfilePage() {
             <Typography variant='h6' fontWeight='bold' color='white'>
               {user.fullName}
             </Typography>
-            <Rating
-              sx={{
-                '& .MuiRating-iconEmpty': {
-                  color: colors.green[600],
-                },
-              }}
-            />
+            {role == Role.DRIVER && (
+              <Rating
+                sx={{
+                  '& .MuiRating-iconEmpty': {
+                    color: colors.green[600],
+                  },
+                }}
+              />
+            )}
           </div>
           <Avatar sx={{ width: '4rem', height: '4rem' }} />
         </Paper>
@@ -64,11 +67,15 @@ export default function ProfilePage() {
             <ChevronRightIcon sx={{ color: 'text.secondary' }} />
           </ListItemButton>
           <Divider />
-          <ListItemButton component={Link} href='/profile/identity'>
-            <ListItemText>Xác thực định danh</ListItemText>
-            <ChevronRightIcon sx={{ color: 'text.secondary' }} />
-          </ListItemButton>
-          <Divider />
+          {role == Role.DRIVER && (
+            <>
+              <ListItemButton component={Link} href='/profile/identity'>
+                <ListItemText>Xác thực định danh</ListItemText>
+                <ChevronRightIcon sx={{ color: 'text.secondary' }} />
+              </ListItemButton>
+              <Divider />
+            </>
+          )}
           <ListItemButton component={Link} href='/profile/change-password'>
             <ListItemText>Đổi mật khẩu</ListItemText>
             <ChevronRightIcon sx={{ color: 'text.secondary' }} />
@@ -79,25 +86,27 @@ export default function ProfilePage() {
             <ChevronRightIcon sx={{ color: 'text.secondary' }} />
           </ListItemButton>
         </List>
-        <List>
-          <Typography variant='h6' gutterBottom>
-            Quản lý cuốc xe
-          </Typography>
-          <ListItemButton component={Link} href='/histories'>
-            <ListItemText>Lịch sử cuốc xe</ListItemText>
-            <ChevronRightIcon sx={{ color: 'text.secondary' }} />
-          </ListItemButton>
-          <Divider />
-          <ListItemButton component={Link} href='/profile/income'>
-            <ListItemText>Thu nhập của tôi</ListItemText>
-            <ChevronRightIcon sx={{ color: 'text.secondary' }} />
-          </ListItemButton>
-          <Divider />
-          <ListItemButton component={Link} href='/profile/wallet'>
-            <ListItemText>Quản lý ví</ListItemText>
-            <ChevronRightIcon sx={{ color: 'text.secondary' }} />
-          </ListItemButton>
-        </List>
+        {role == Role.DRIVER && (
+          <List>
+            <Typography variant='h6' gutterBottom>
+              Quản lý cuốc xe
+            </Typography>
+            <ListItemButton component={Link} href='/histories'>
+              <ListItemText>Lịch sử cuốc xe</ListItemText>
+              <ChevronRightIcon sx={{ color: 'text.secondary' }} />
+            </ListItemButton>
+            <Divider />
+            <ListItemButton component={Link} href='/profile/income'>
+              <ListItemText>Thu nhập của tôi</ListItemText>
+              <ChevronRightIcon sx={{ color: 'text.secondary' }} />
+            </ListItemButton>
+            <Divider />
+            <ListItemButton component={Link} href='/profile/wallet'>
+              <ListItemText>Quản lý ví</ListItemText>
+              <ChevronRightIcon sx={{ color: 'text.secondary' }} />
+            </ListItemButton>
+          </List>
+        )}
         <ListItemButton onClick={() => setLogOutDialog(true)}>
           <ListItemText primaryTypographyProps={{ color: 'error' }}>Đăng xuất</ListItemText>
         </ListItemButton>

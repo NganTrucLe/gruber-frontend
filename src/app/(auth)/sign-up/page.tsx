@@ -5,6 +5,8 @@ import { Field, Form, Formik } from 'formik';
 import { pick } from 'lodash';
 
 import InputAdornment from '@mui/material/InputAdornment';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
@@ -14,8 +16,10 @@ import { useToast } from '@/hooks';
 import { register } from '@/libs/query';
 import { InputLayout, LoadingButton, PasswordInput } from '@/libs/ui';
 import { SignUpSchema } from '@/libs/validations';
+import { Role } from '@/libs/enum';
 
 interface SignUpForm {
+  role: Role.PASSENGER | Role.DRIVER | Role.STAFF;
   email: string;
   password: string;
   repassword: string;
@@ -25,11 +29,7 @@ export default function SignUp() {
   const router = useRouter();
   const toast = useToast();
   const { mutate, isPending } = useMutation({
-    mutationFn: (request: { email: string; password: string }) =>
-      register({
-        ...request,
-        role: 'passenger',
-      }),
+    mutationFn: register,
     mutationKey: ['register'],
     onSuccess: () => {
       toast.setToast('success', 'Đăng ký thành công', 'Check email để xác thực tài khoản');
@@ -41,7 +41,7 @@ export default function SignUp() {
   });
 
   const handleSubmit = (values: SignUpForm) => {
-    const request = pick(values, ['email', 'password']);
+    const request = pick(values, ['email', 'password', 'role']);
     mutate(request);
   };
 
@@ -53,6 +53,7 @@ export default function SignUp() {
       <Formik
         initialValues={
           {
+            role: Role.PASSENGER,
             email: '',
             password: '',
           } as SignUpForm
@@ -113,6 +114,15 @@ export default function SignUp() {
                       />
                     );
                   }}
+                </Field>
+              </InputLayout>
+              <InputLayout
+                label='Bạn đăng ký dưới người dùng nào'
+                helperText={touched.role && errors.role ? errors.role : ''}>
+                <Field as={Select} name='role' error={touched.role && errors.role ? true : false}>
+                  <MenuItem value={Role.PASSENGER}>Hành khách</MenuItem>
+                  <MenuItem value={Role.DRIVER}>Tài xế</MenuItem>
+                  <MenuItem value={Role.STAFF}>Nhân viên</MenuItem>
                 </Field>
               </InputLayout>
               <Typography>

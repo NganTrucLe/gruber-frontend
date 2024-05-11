@@ -41,7 +41,7 @@ const MapContainer = styled(APIProvider)({
 
 export default function HomePage() {
   const router = useRouter();
-  const [method, setMethod] = useState<PaymentMethod>('card');
+  const [method, setMethod] = useState<PaymentMethod>('cash');
   const [vehicle, setVehicle] = useState<Vehicle>('motorbike');
   const [distance, setDistance] = useState<number>(0);
   const { setToast } = useToast();
@@ -59,7 +59,7 @@ export default function HomePage() {
   const { mutate, isPending } = useMutation({
     mutationFn: bookARide,
     onSuccess: () => {
-      setToast('success', 'Đăng xe thành công');
+      setToast('success', 'Đặt xe thành công');
       router.push('/ride');
     },
     onError: (error) => {
