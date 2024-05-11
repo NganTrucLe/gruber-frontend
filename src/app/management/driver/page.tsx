@@ -6,6 +6,7 @@ import { getDrivers } from '@/libs/query';
 import { styled } from '@mui/material/styles';
 import LockIcon from '@mui/icons-material/LockRounded';
 import UnlockIcon from '@mui/icons-material/LockOpenRounded';
+import ViewDetailIcon from '@mui/icons-material/VisibilityRounded';
 
 import { Typography, Box } from '@mui/material';
 import { lockDriver } from '@/libs/query';
@@ -25,10 +26,20 @@ const Main = styled('main')(({ theme }) => ({
 export default function DriverManagementPage() {
   const queryClient = useQueryClient();
   const toast = useToast();
+
   const { data, status } = useQuery({
     queryKey: ['huhu'],
     queryFn: getDrivers,
   });
+
+  const mappedData =
+    data?.map((item: any, index: number) => ({
+      ...item,
+      vehicle_type: item.vehicle?.type,
+      vehicle_plate: item.vehicle?.plate,
+      realId: item.id,
+      id: index + 1,
+    })) || [];
 
   const { mutate } = useMutation({
     mutationKey: ['driver'],
@@ -42,13 +53,6 @@ export default function DriverManagementPage() {
     },
   });
 
-  const mappedData =
-    data?.map((item: any, index: number) => ({
-      ...item,
-      realId: item.id,
-      id: index + 1,
-    })) || [];
-
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1 },
     { field: 'fullName', headerName: 'Họ và tên', flex: 2 },
@@ -58,10 +62,20 @@ export default function DriverManagementPage() {
       headerName: 'Loại xe',
       flex: 2,
       valueGetter: (value) =>
-        `${value == 'MOTORBIKE' ? 'Xe máy' : value == 'CAR4' ? 'Xe 4 chỗ' : value == 'CAR7' ? 'Xe 7 chỗ' : 'Không xác định'}`,
+        `${value == 'motorbike' ? 'Xe máy' : value == 'car4' ? 'Xe 4 chỗ' : value == 'car7' ? 'Xe 7 chỗ' : 'Không xác định'}`,
     },
-    { field: 'vehicle_plate', headerName: 'Biển số xe', flex: 2 },
-    { field: 'activity_status', headerName: 'Trạng thái hoạt động', flex: 2 },
+    {
+      field: 'vehicle_plate',
+      headerName: 'Biển số xe',
+      flex: 2,
+      valueGetter: (value) => value || 'Không xác định',
+    },
+    {
+      field: 'activity_status',
+      headerName: 'Trạng thái hoạt động',
+      flex: 2,
+      valueGetter: (value) => (value == 'online' ? 'Đang hoạt động' : 'Không hoạt động'),
+    },
     {
       field: 'isValidated',
       headerName: 'Đã xác thực',
@@ -78,6 +92,12 @@ export default function DriverManagementPage() {
           icon={params.row.isValidated ? <LockIcon /> : <UnlockIcon />}
           label='Khoá tài khoản'
           onClick={() => mutate(params.row.realId)}
+        />,
+        <GridActionsCellItem
+          key={params.row.id}
+          icon={<ViewDetailIcon />}
+          label='Xem chi tiết'
+          onClick={() => console.log('View detail')}
         />,
       ],
     },

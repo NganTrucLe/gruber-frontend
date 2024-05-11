@@ -81,16 +81,20 @@ export const getUserById = async (userId: string) => {
 };
 
 export const getDrivers = async (): Promise<any> => {
-  // await sleep(500);
-  // return driversAll;
-  const response = await fetch(`${ENDPOINT}/users?role=driver`);
+  const responseDriver = await fetch(`${ENDPOINT}/users?role=driver`);
 
-  if (!response.ok) {
+  if (!responseDriver.ok) {
     throw new Error('Có lỗi xảy ra khi thực hiện thao tác này');
   }
 
-  const { data } = await response.json();
-  return data;
+  const { data: drivers } = await responseDriver.json();
+
+  const vehicles = await Promise.all(drivers.map((driver: any) => getVehicleByDriverId(driver.id)));
+
+  return drivers.map((driver: any, index: number) => ({
+    ...driver,
+    vehicle: vehicles[index],
+  }));
 };
 
 export const lockDriver = async (user_id: string): Promise<{ message: string; data: any }> => {

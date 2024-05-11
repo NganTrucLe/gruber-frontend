@@ -6,12 +6,11 @@ import { sleep } from '@/libs/utils';
 import { BookingStatus, StatusCode, Vehicle } from '@/libs/enum';
 
 export const getBookingHistory = async () => {
-  await sleep(5000);
+  // await sleep(5000);
   return histories;
 };
 
 export const getBookingById = async (_id: string) => {
-  await sleep(5000);
   return history;
 };
 
