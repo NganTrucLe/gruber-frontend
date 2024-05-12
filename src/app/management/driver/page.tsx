@@ -2,15 +2,16 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DataGrid, GridColDef, GridActionsCellItem, GridCellParams } from '@mui/x-data-grid';
 
-import { getDrivers } from '@/libs/query';
+import { getDrivers, lockDriver } from '@/libs/query';
 import { styled } from '@mui/material/styles';
 import LockIcon from '@mui/icons-material/LockRounded';
 import UnlockIcon from '@mui/icons-material/LockOpenRounded';
+import ViewDetailIcon from '@mui/icons-material/VisibilityRounded';
 
 import { Typography, Box } from '@mui/material';
-import { lockDriver } from '@/libs/query';
 import { useToast } from '@/hooks';
 import { AdminNavbar } from '@/app/_components/AdminNavbar';
+import { formatVehicleType } from '@/libs/utils';
 
 const Main = styled('main')(({ theme }) => ({
   margin: '0 5rem',
@@ -25,6 +26,7 @@ const Main = styled('main')(({ theme }) => ({
 export default function DriverManagementPage() {
   const queryClient = useQueryClient();
   const toast = useToast();
+
   const { data, status } = useQuery({
     queryKey: ['huhu'],
     queryFn: getDrivers,
@@ -42,13 +44,6 @@ export default function DriverManagementPage() {
     },
   });
 
-  const mappedData =
-    data?.map((item: any, index: number) => ({
-      ...item,
-      realId: item.id,
-      id: index + 1,
-    })) || [];
-
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID', flex: 1 },
     { field: 'fullName', headerName: 'Họ và tên', flex: 2 },
@@ -57,11 +52,20 @@ export default function DriverManagementPage() {
       field: 'vehicle_type',
       headerName: 'Loại xe',
       flex: 2,
-      valueGetter: (value) =>
-        `${value == 'MOTORBIKE' ? 'Xe máy' : value == 'CAR4' ? 'Xe 4 chỗ' : value == 'CAR7' ? 'Xe 7 chỗ' : 'Không xác định'}`,
+      valueGetter: (value) => `${value ? formatVehicleType(value) : 'Không xác định'}`,
     },
-    { field: 'vehicle_plate', headerName: 'Biển số xe', flex: 2 },
-    { field: 'activity_status', headerName: 'Trạng thái hoạt động', flex: 2 },
+    {
+      field: 'vehicle_plate',
+      headerName: 'Biển số xe',
+      flex: 2,
+      valueGetter: (value) => value || 'Không xác định',
+    },
+    {
+      field: 'activityStatus',
+      headerName: 'Trạng thái hoạt động',
+      flex: 2,
+      valueGetter: (value) => (value == 'online' ? 'Đang hoạt động' : 'Không hoạt động'),
+    },
     {
       field: 'isValidated',
       headerName: 'Đã xác thực',
@@ -77,7 +81,13 @@ export default function DriverManagementPage() {
           key={params.row.id}
           icon={params.row.isValidated ? <LockIcon /> : <UnlockIcon />}
           label='Khoá tài khoản'
-          onClick={() => mutate(params.row.realId)}
+          onClick={() => mutate(params.row.id)}
+        />,
+        <GridActionsCellItem
+          key={params.row.id}
+          icon={<ViewDetailIcon />}
+          label='Xem chi tiết'
+          onClick={() => console.log('View detail')}
         />,
       ],
     },
@@ -96,7 +106,7 @@ export default function DriverManagementPage() {
           <Box sx={{ height: 400, width: '100%' }}>
             <DataGrid
               loading={status === 'pending'}
-              rows={mappedData}
+              rows={data ?? []}
               columns={columns}
               initialState={{
                 pagination: {

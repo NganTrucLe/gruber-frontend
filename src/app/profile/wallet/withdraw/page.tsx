@@ -88,7 +88,7 @@ export default function WithdrawPage() {
           <Stack direction='row' alignItems={'center'} sx={{ mb: 2 }}>
             <TransactionCard
               variant='send'
-              primary={walletState == WalletType.CASH ? 'Ví tín dụng' : 'Ví tiền mặt'}
+              primary={walletState == WalletType.CASH ? 'Ví tiền mặt' : 'Ví tín dụng'}
               secondary={formatPrice(inputValue)}
             />
             <LinearProgress color='success' sx={{ flexGrow: 1 }} />

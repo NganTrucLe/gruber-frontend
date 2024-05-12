@@ -106,6 +106,10 @@ export const currentBookings = async () => {
   return await doGet(`/bookings?current=true`);
 };
 
+export const allBookings = async () => {
+  return await doGet('/bookings?current=false');
+};
+
 export const getVehiclePrice = async (distance: number) => {
   return await doGet(`/bookings/price?distance=${distance}`);
 };

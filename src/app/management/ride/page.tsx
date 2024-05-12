@@ -1,7 +1,10 @@
 'use client';
 import { styled } from '@mui/material/styles';
 
+import { Typography } from '@mui/material';
+
 import { AdminNavbar } from '@/app/_components/AdminNavbar';
+import AllRides from './AllRides';
 
 const Main = styled('main')(({ theme }) => ({
   margin: '0 5rem',
@@ -13,10 +16,16 @@ const Main = styled('main')(({ theme }) => ({
   },
 }));
 
-export default function RideManagementPage() {
+export default function RideManagement() {
   return (
     <Main>
       <AdminNavbar />
+      <section>
+        <Typography variant='h6' fontWeight='bold' gutterBottom>
+          Danh sách các cuốc xe
+        </Typography>
+        <AllRides />
+      </section>
     </Main>
   );
 }
