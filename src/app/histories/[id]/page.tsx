@@ -18,7 +18,10 @@ import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 import { useGoogleMapAPI } from '@/hooks';
 import { getBookingById, updateRating } from '@/libs/query';
 import { Marker, TopAppBar } from '@/libs/ui';
+import { Role } from '@/libs/enum';
 import { formatPrice } from '@/libs/utils';
+import { useRecoilValue } from 'recoil';
+import { roleState } from '@/recoils';
 
 const Main = styled('main')(({ theme }) => ({
   padding: theme.spacing(2),
@@ -34,6 +37,7 @@ const Main = styled('main')(({ theme }) => ({
 
 export default function HistoryDetailPage({ params }: { params: { id: string } }) {
   const [isRate, setIsRate] = useState(false);
+  const role = useRecoilValue(roleState);
   const { data, status } = useQuery({
     queryKey: ['histories', params.id],
     queryFn: () => getBookingById(params.id),
@@ -148,9 +152,11 @@ export default function HistoryDetailPage({ params }: { params: { id: string } }
               </Typography>
             </Stack>
           </Stack>
-          <Button size='large' variant='secondary'>
-            Đặt lại
-          </Button>
+          {role == Role.PASSENGER && (
+            <Button size='large' variant='secondary'>
+              Đặt lại
+            </Button>
+          )}
         </Stack>
       </Main>
     );

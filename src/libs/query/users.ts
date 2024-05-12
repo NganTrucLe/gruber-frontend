@@ -70,3 +70,12 @@ export const getProfile = async () => {
   }
   throw new Error(message);
 };
+
+export const getUserById = async (userId: string) => {
+  const response = await fetch(`${ENDPOINT}/users/${userId}`);
+  const { data, statusCode, message } = await response.json();
+  if (statusCode === StatusCode.SUCCESS) {
+    return data;
+  }
+  throw new Error(message);
+};
