@@ -24,9 +24,12 @@ import RefreshIcon from '@mui/icons-material/RefreshRounded';
 import IncomeIcon from '@mui/icons-material/SignalCellularAltRounded';
 import StarIcon from '@mui/icons-material/StarRounded';
 
-import { useCurrentLocation, useFirebaseMessaging, useGoogleMapAPI } from '@/hooks';
+import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
 import IncomeOptions from './IncomeOptions';
 import { AutoNotiDialog, ManualNotiDialog } from './NotiDialog';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { currentBookingOfUser, updateRideStatus } from '@/libs/query';
+import { BookingStatus } from '@/libs/enum';
 
 const Main = styled('main')({
   width: '100vw',
@@ -92,6 +95,7 @@ interface Noti {
   destination: string;
 }
 export default function HomePage() {
+  const toast = useToast();
   const [online, setOnline] = useState(true);
   const [message, setMessage] = useState<ReactNode>(null);
   const [auto, setAuto] = useState(false);
@@ -99,13 +103,25 @@ export default function HomePage() {
   const [openIncome, setOpenIncome] = useState(false);
   const position = useCurrentLocation();
   const { apiKey, mapId } = useGoogleMapAPI();
+  const queryClient = useQueryClient();
   const router = useRouter();
-  useFirebaseMessaging((payload) => {
-    const data: Noti = {
-      pickup: payload.data.pickup,
-      destination: payload.data.destination,
-    };
-    setNewRide(data);
+
+  const { data, refetch } = useQuery({
+    queryKey: ['current-ride'],
+    queryFn: currentBookingOfUser,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: (targetStatus: BookingStatus) => updateRideStatus(data.id, targetStatus),
+    onSuccess: () => {
+      toast.setToast('success', 'Đã gửi thông báo đến khách');
+      queryClient.invalidateQueries({ queryKey: ['current-ride'] });
+      queryClient.removeQueries({ queryKey: ['current-ride'] });
+      router.push('/ride');
+    },
+    onError: (error) => {
+      toast.setToast('error', 'Không thành công', error.message);
+    },
   });
 
   const handleChangeOnline = () => {
@@ -122,13 +138,6 @@ export default function HomePage() {
     setNewRide(null);
     // TODO: Trigger to firebase to decline
     // ...
-  };
-
-  const handleAccept = () => {
-    setNewRide(null);
-    // Trigger to firebase and backend to accept
-    // ...
-    router.push('/ride');
   };
 
   useEffect(() => {
@@ -235,7 +244,9 @@ export default function HomePage() {
                 <PowerIcon fontSize='large' sx={{ mr: online ? 0 : 1 }} />
                 {online ? null : 'Bật kết nối'}
               </Fab>
-              <Fab sx={{ width: '4rem', height: '4rem', mb: 2, boxShadow: 0, bgcolor: 'white !important' }}>
+              <Fab
+                sx={{ width: '4rem', height: '4rem', mb: 2, boxShadow: 0, bgcolor: 'white !important' }}
+                onClick={() => refetch()}>
                 <RefreshIcon fontSize='large' />
               </Fab>
             </Stack>
@@ -273,12 +284,12 @@ export default function HomePage() {
         </MapContainer>
       )}
       {auto && Boolean(newRide) ? (
-        <AutoNotiDialog open={Boolean(newRide)} onClose={handleAccept} />
+        <AutoNotiDialog open={Boolean(newRide)} onClose={() => mutate(BookingStatus.ACCEPTED)} />
       ) : (
         <ManualNotiDialog
-          props={{ open: Boolean(newRide), onClose: handleDecline }}
-          bookingInfo={newRide}
-          onAccept={() => handleAccept()}
+          props={{ open: Boolean(data), onClose: handleDecline }}
+          bookingInfo={data}
+          onAccept={() => mutate(BookingStatus.ACCEPTED)}
           onDecline={() => handleDecline()}
         />
       )}

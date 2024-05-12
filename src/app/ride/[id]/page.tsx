@@ -1,24 +1,34 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
+import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
 import { APIProvider, Map } from '@vis.gl/react-google-maps';
 import { useRecoilValue } from 'recoil';
-import { roleState } from '@/recoils/atom';
-import { Role } from '@/libs/enum';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+import { CircularProgress } from '@mui/material';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Box from '@mui/material/Box';
-import { LoadingButton, Marker } from '@/libs/ui';
-import { useCurrentLocation, useGoogleMapAPI } from '@/hooks';
+
 import BackIcon from '@mui/icons-material/KeyboardBackspaceRounded';
-import { bookingDetail } from '@/libs/query';
-import { CircularProgress } from '@mui/material';
+
+import { roleState } from '@/recoils/atom';
+import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
+import { Role } from '@/libs/enum';
+import { LoadingButton, Marker } from '@/libs/ui';
+import { assignDriverToBooking, bookingDetail } from '@/libs/query';
 import { formatBookingStatus, formatPrice, formatVehicleType } from '@/libs/utils';
+
+const ChooseDriver = dynamic(() => import('./ChooseDriver'), { ssr: false });
 
 export default function RideDetailsPage({ params }: { params: { id: string } }) {
   const role = useRecoilValue(roleState);
+  const queryClient = useQueryClient();
+  const { setToast } = useToast();
+  const [driver, setDriver] = useState<string | null>(null);
   const { apiKey, mapId } = useGoogleMapAPI();
   const router = useRouter();
   const position = useCurrentLocation();
@@ -28,6 +38,15 @@ export default function RideDetailsPage({ params }: { params: { id: string } }) 
   const { data, status } = useQuery({
     queryKey: ['bookings', params.id],
     queryFn: () => bookingDetail(params.id),
+  });
+  const { mutate, isPending } = useMutation({
+    mutationFn: () => assignDriverToBooking(params.id, driver!),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookings', params.id] });
+    },
+    onError: (error) => {
+      setToast('error', error.message);
+    },
   });
 
   return (
@@ -107,8 +126,11 @@ export default function RideDetailsPage({ params }: { params: { id: string } }) 
                   <Typography variant='h6' fontWeight='bold'>
                     Thông tin tài xế
                   </Typography>
-                  {Boolean(data.driver) && data.driver.fullName ? (
+                  {data.driverId ? (
                     <>
+                      <Typography>
+                        <b>Mã tài xế:</b> {data.driverId}
+                      </Typography>
                       <Typography>
                         <b>Tên:</b> {data.driver.name}
                       </Typography>
@@ -126,8 +148,16 @@ export default function RideDetailsPage({ params }: { params: { id: string } }) 
                         Chưa có tài xế, vui lòng chọn 1 tài xế trên bản đồ
                       </Typography>
                       <br />
+                      <ChooseDriver onSelectDriver={(id) => setDriver(id)} />
+                      {driver ? (
+                        <Typography gutterBottom>
+                          <b>Đã chọn tài xế:</b> {driver}
+                        </Typography>
+                      ) : null}
                       <LoadingButton
-                        loading={false}
+                        loading={isPending}
+                        disabled={driver === null}
+                        onClick={() => mutate()}
                         sx={{ width: 'fit-content', left: '50%', transform: 'translate(-50%,0)' }}>
                         Gửi thông tin đến tài xế
                       </LoadingButton>

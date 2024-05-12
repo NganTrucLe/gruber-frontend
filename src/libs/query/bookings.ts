@@ -1,5 +1,5 @@
 const ENDPOINT = process.env.NEXT_PUBLIC_NAME_API_ENDPOINT;
-import { doGet } from './methods';
+import { doGet, doPatch } from './methods';
 import { getStoredValue } from '@/libs/utils';
 import { sleep } from '@/libs/utils';
 import { BookingStatus, StatusCode, Vehicle } from '@/libs/enum';
@@ -19,7 +19,7 @@ export const updateRating = async (id: string, rating: number): Promise<{ id: st
   return { id, rating };
 };
 
-export const currentBookings = async () => {
+export const currentBookingOfUser = async () => {
   const user_id = getStoredValue('user_id');
   const response = await fetch(`${ENDPOINT}/users/${user_id}/current-booking`);
   const { data, statusCode, message } = await response.json();
@@ -102,10 +102,23 @@ export const updateRideStatus = async (booking_id: string, status: BookingStatus
   throw new Error(message);
 };
 
-export const currentBookingss = async () => {
+export const currentBookings = async () => {
   return await doGet(`/bookings?current=true`);
 };
 
 export const getVehiclePrice = async (distance: number) => {
   return await doGet(`/bookings/price?distance=${distance}`);
+};
+
+export const assignDriverToBooking = async (booking_id: string, driver_id: string) => {
+  const user_id = getStoredValue('user_id');
+  const request = {
+    driver_id,
+    updated_by_id: user_id,
+  };
+  const { data, message, statusCode } = await doPatch(`/bookings/${booking_id}/driver`, request);
+  if (statusCode === StatusCode.SUCCESS) {
+    return data;
+  }
+  throw new Error(message);
 };
