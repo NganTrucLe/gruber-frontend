@@ -1,3 +1,5 @@
+import { BookingStatus, VehicleType } from '../enum';
+
 export function hiddenEmail(email: string) {
   const [username, domain] = email.split('@');
   let hiddenUsername = `${username.slice(0, 2)}***${username.slice(-2)}`;
@@ -23,6 +25,32 @@ export function formatPrice(price: number | string) {
   if (typeof price === 'string')
     return parseFloat(price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
   return price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+}
+
+export function formatBookingStatus(status: BookingStatus) {
+  switch (status) {
+    case BookingStatus.PENDING:
+      return 'Tìm tài xế';
+    case BookingStatus.PICKED_UP:
+      return 'Đã đón khách';
+    case BookingStatus.IN_PROGRESS:
+      return 'Đang di chuyển';
+    case BookingStatus.ARRIVED:
+      return 'Chờ thanh toán';
+    default:
+      return 'Hoàn thành';
+  }
+}
+
+export function formatVehicleType(type: VehicleType) {
+  switch (type) {
+    case VehicleType.MOTORBIKE:
+      return 'Xe máy';
+    case VehicleType.CAR4:
+      return 'Xe 4 chỗ';
+    default:
+      return 'Xe 7 chỗ';
+  }
 }
 
 export function shortenAddress(address: string) {

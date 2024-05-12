@@ -100,7 +100,7 @@ export default function WithdrawPage() {
           </Stack>
           <Stack alignItems={'center'} sx={{ width: '100%' }}>
             <Typography>
-              Số dư&ensp;{walletState == WalletType.CASH ? 'Ví tín dụng' : 'Ví tiền mặt'}:{' '}
+              Số dư&ensp;{walletState == WalletType.CASH ? 'Ví tiền mặt' : 'Ví tín dụng'}:{' '}
               <b>
                 {formatPrice(walletState == WalletType.CASH ? wallet.cashWallet.amount : wallet.creditWallet.amount)}
               </b>

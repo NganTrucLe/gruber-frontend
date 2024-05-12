@@ -1,11 +1,13 @@
 import * as React from 'react';
+import Link from 'next/link';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { useQuery } from '@tanstack/react-query';
 
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 
-import { currentRides } from '@/libs/query';
+import { currentBookingss } from '@/libs/query';
+import { BookingStatus, VehicleType } from '@/libs/enum';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Mã cuốc', width: 90 },
@@ -13,7 +15,7 @@ const columns: GridColDef[] = [
     field: 'payment_method',
     headerName: 'Phương thức thanh toán',
     width: 200,
-    valueGetter: (value) => `${value == 'card' ? 'Chuyển khoản' : 'Tiền mặt'}`,
+    valueGetter: (value) => `${value == 'card' ? 'Thẻ' : 'Tiền mặt'}`,
   },
   {
     field: 'status',
@@ -21,36 +23,62 @@ const columns: GridColDef[] = [
     description: 'Trạng thái của một cuốc xe hiện tại',
     renderCell: (params) => (
       <Chip
-        color={params.value == 'Chờ xác nhận' ? 'warning' : 'default'}
+        color={params.value == 'Tìm tài xế' ? 'warning' : 'default'}
         variant='outlined'
         label={params.value}
         size='small'
       />
     ),
-    valueGetter: (value) =>
-      `${value == 'pending' ? 'Chờ xác nhận' : value == 'picked_up' ? 'Đã đón khách' : value == 'in_progress' ? 'Đang di chuyển' : 'Hoàn thành'}`,
+    valueGetter: (value) => {
+      switch (value) {
+        case BookingStatus.PENDING:
+          return 'Tìm tài xế';
+        case BookingStatus.PICKED_UP:
+          return 'Đã đón khách';
+        case BookingStatus.IN_PROGRESS:
+          return 'Đang di chuyển';
+        case BookingStatus.ARRIVED:
+          return 'Chờ thanh toán';
+        default:
+          return 'Hoàn thành';
+      }
+    },
     width: 150,
   },
   {
     field: 'vehicle_type',
     headerName: 'Loại xe',
     width: 110,
-    valueGetter: (value) => `${value == 'motorbike' ? 'Xe máy' : value == 'car4' ? 'Xe 4 chỗ' : 'Xe 7 chỗ'}`,
+    valueGetter: (value) =>
+      `${value == VehicleType.MOTORBIKE ? 'Xe máy' : value == VehicleType.CAR4 ? 'Xe 4 chỗ' : VehicleType.CAR7}`,
   },
   {
     field: 'booking_route',
     headerName: 'Đường đi',
-    description: 'This column has a value getter and is not sortable.',
     sortable: false,
-    width: 250,
-    valueGetter: (_value, row) => `${row.pick_up || ''} - ${row.destination || ''}`,
+    width: 350,
+    valueGetter: (_value, row) =>
+      `${row.booking_route.pick_up.formatted_address || ''} - ${row.booking_route.destination.formatted_address || ''}`,
+  },
+  {
+    field: 'price',
+    headerName: 'Giá',
+    sortable: true,
+    width: 100,
+  },
+  {
+    field: 'more',
+    headerName: 'Xem thêm',
+    sortable: false,
+    width: 100,
+    renderCell: (params) => <Link href={`/ride/${params.row.id}`}>Xem thêm</Link>,
   },
 ];
 
 export default function CurrentRides() {
   const { data, status } = useQuery({
-    queryKey: ['currentRides'],
-    queryFn: currentRides,
+    queryKey: ['bookings'],
+    queryFn: currentBookingss,
   });
 
   if (status === 'error') return <div>Error</div>;
