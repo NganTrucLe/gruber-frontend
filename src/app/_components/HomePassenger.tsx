@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { AdvancedMarker, APIProvider, Map } from '@vis.gl/react-google-maps';
@@ -26,6 +26,7 @@ import { calculateDistance, formatDistance } from '@/libs/utils';
 import SearchGroup from './SearchGroup';
 import SelectMethodDialog from './SelectMethodDialog';
 import SelectVehicle from './SelectVehicle';
+import { WebSocketContext } from '@/contexts/WebSocket.context';
 
 const Main = styled('main')({
   width: '100vw',
@@ -41,7 +42,7 @@ const MapContainer = styled(APIProvider)({
 
 export default function HomePage() {
   const router = useRouter();
-  const [method, setMethod] = useState<PaymentMethod>('card');
+  const [method, setMethod] = useState<PaymentMethod>('cash');
   const [vehicle, setVehicle] = useState<Vehicle>('motorbike');
   const [distance, setDistance] = useState<number>(0);
   const { setToast } = useToast();
@@ -49,6 +50,7 @@ export default function HomePage() {
   const [pickup, setPickup] = useState<google.maps.places.PlaceResult | null>(null);
   const [destination, setDestination] = useState<google.maps.places.PlaceResult | null>(null);
   const position = useCurrentLocation();
+  const socket = useContext(WebSocketContext);
   const { apiKey, mapId } = useGoogleMapAPI();
   useEffect(() => {
     if (pickup?.geometry?.location && destination?.geometry?.location) {
@@ -56,10 +58,25 @@ export default function HomePage() {
     }
   }, [pickup, destination]);
 
+  const userID = '8faaa15a-ec25-4290-8b96-966db09e4f73'; //get from local storage, driverID or userID or staffID
+  useEffect(() => {
+    socket?.on('connect', () => {
+      console.log('Connected');
+    });
+    socket?.on(`${userID}`, (data) => {
+      console.log(`${userID}`, data);
+    });
+
+    return () => {
+      socket?.off(`${userID}`);
+      socket?.off('connect');
+    };
+  }, []);
+
   const { mutate, isPending } = useMutation({
     mutationFn: bookARide,
     onSuccess: () => {
-      setToast('success', 'Đăng xe thành công');
+      setToast('success', 'Đặt xe thành công');
       router.push('/ride');
     },
     onError: (error) => {

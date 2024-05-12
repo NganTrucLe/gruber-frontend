@@ -16,7 +16,7 @@ import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 
 import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
 import { BookingStatus } from '@/libs/enum';
-import { currentRide, updateRideStatus } from '@/libs/query';
+import { currentBookings, updateRideStatus } from '@/libs/query';
 import { LoadingButton } from '@/libs/ui';
 import { Marker } from '@/libs/ui';
 import { formatPrice } from '@/libs/utils';
@@ -99,7 +99,7 @@ export default function RidePage() {
     refetch,
   } = useQuery({
     queryKey: ['current-ride'],
-    queryFn: currentRide,
+    queryFn: currentBookings,
   });
 
   if (status == 'pending') {

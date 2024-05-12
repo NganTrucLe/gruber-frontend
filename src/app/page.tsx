@@ -44,14 +44,7 @@ const Main = styled('main')(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     position: 'fixed',
-    height: 'fit-content',
-    top: 'auto',
-    left: '0',
-    right: '0',
-    transform: 'none',
-    bottom: 0,
-    borderRadius: '1rem 1rem 0 0',
-    maxWidth: '100vh',
+    maxWidth: '100vw',
   },
 }));
 
