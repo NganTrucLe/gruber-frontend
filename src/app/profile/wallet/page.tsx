@@ -10,6 +10,8 @@ import Stack from '@mui/material/Stack';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useMediaQuery } from '@mui/material';
 
 import ChevronRightIcon from '@mui/icons-material/ChevronRightRounded';
 import IncomeIcon from '@mui/icons-material/EqualizerRounded';
@@ -21,7 +23,6 @@ import BankWalletDialog from './BankWalletDialog';
 import CashWalletDialog from './CashWalletDialog';
 import { getWalletsByDriverId } from '@/libs/query';
 import { useQuery } from '@tanstack/react-query';
-import CircularProgress from '@mui/material/CircularProgress';
 
 export default function WalletPage() {
   const [dialogBank, setDialogBank] = useState(false);
@@ -30,6 +31,7 @@ export default function WalletPage() {
     queryKey: ['wallets'],
     queryFn: getWalletsByDriverId,
   });
+  const isMobile = useMediaQuery((theme: any) => theme.breakpoints.down('sm'));
 
   return (
     <Main>
@@ -54,8 +56,8 @@ export default function WalletPage() {
           />
         </Tabs>
       </Stack>
-      <Stack sx={{ flexDirection: { sx: 'row', md: 'column' } }} spacing={2}>
-        <Card variant='outlined' sx={{ mt: 2 }}>
+      <Stack direction={isMobile ? 'column' : 'row'} spacing={2} sx={{ m: { sx: 0, md: '8rem' } }} alignItems='center'>
+        <Card variant='outlined' sx={{ mt: 2, width: '100%', flexGrow: 1 }}>
           <CardActionArea sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => setDialogBank(true)}>
             <CardContent>
               <Typography variant='caption' color='text.secondary'>
@@ -74,7 +76,7 @@ export default function WalletPage() {
             </CardActions>
           </CardActionArea>
         </Card>
-        <Card variant='outlined' sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+        <Card variant='outlined' sx={{ mt: 2, width: '100%', flexGrow: 1 }}>
           <CardActionArea sx={{ display: 'flex', justifyContent: 'space-between' }} onClick={() => setDialogCash(true)}>
             <CardContent>
               <Typography variant='caption' color='text.secondary'>

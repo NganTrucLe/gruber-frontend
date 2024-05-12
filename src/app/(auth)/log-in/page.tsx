@@ -32,7 +32,7 @@ export default function LogIn() {
       router.push('/');
     },
     onError: (error) => {
-      setToast('success', `Đăng nhập thất bại`, error.message);
+      setToast('error', `Đăng nhập thất bại`, error.message);
     },
   });
   return (

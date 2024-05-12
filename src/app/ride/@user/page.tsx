@@ -17,7 +17,7 @@ import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 
 import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
 import { BookingStatus } from '@/libs/enum';
-import { currentRide, updateRideStatus } from '@/libs/query';
+import { currentBookings, updateRideStatus } from '@/libs/query';
 import { Directions, LoadingButton, Marker } from '@/libs/ui';
 import { formatPrice } from '@/libs/utils';
 
@@ -40,7 +40,7 @@ export default function RidePage() {
   const { apiKey, mapId } = useGoogleMapAPI();
   const { data, status } = useQuery({
     queryKey: ['current-ride'],
-    queryFn: currentRide,
+    queryFn: currentBookings,
   });
 
   const { mutate, isPending } = useMutation({
@@ -118,29 +118,44 @@ export default function RidePage() {
               }}
               component={Stack}
               spacing={2}>
-              <Stack direction='row' spacing={2}>
-                <Avatar />
-                <div>
-                  <Typography fontWeight='bold'>{driver.name}</Typography>
-                  <Typography color='primary'>{getText(status)}</Typography>
-                </div>
-              </Stack>
-              <div>
-                <Typography>
-                  <b>Biển số: </b>
-                  {driver?.plate}
-                </Typography>
-                <Typography>
-                  <b>Mô tả: </b>
-                  {driver?.description}
-                </Typography>
-              </div>
+              {status !== BookingStatus.PENDING ? (
+                <>
+                  <Stack direction='row' spacing={2}>
+                    <Avatar />
+                    <div>
+                      <Typography fontWeight='bold'>{driver.name}</Typography>
+                      <Typography color='primary'>{getText(status)}</Typography>
+                    </div>
+                  </Stack>
+                  <div>
+                    <Typography>
+                      <b>Biển số: </b>
+                      {driver?.plate}
+                    </Typography>
+                    <Typography>
+                      <b>Mô tả: </b>
+                      {driver?.description}
+                    </Typography>
+                  </div>
+                </>
+              ) : (
+                <Typography color='primary'>{getText(status)}</Typography>
+              )}
               <Divider />
               <div>
-                <Typography>Điểm đón:</Typography>
-                <Typography variant='h6'>{booking_route.pick_up.formatted_address}</Typography>
-                <Typography>Điểm đến:</Typography>
-                <Typography variant='h6'>{booking_route.destination.formatted_address}</Typography>
+                <Typography variant='body1'>
+                  Điểm đón: <b>{booking_route.pick_up.name}</b>
+                </Typography>
+                <Typography variant='body1' gutterBottom sx={{ color: 'text.secondary' }}>
+                  {booking_route.pick_up.formatted_address}
+                </Typography>
+                <br />
+                <Typography variant='body1'>
+                  Điểm đến: <b>{booking_route.destination.name}</b>
+                </Typography>
+                <Typography variant='body1' gutterBottom sx={{ color: 'text.secondary' }}>
+                  {booking_route.destination.formatted_address}
+                </Typography>
                 <Typography variant='body1'>
                   {formatPrice(price)} &ensp; {payment_method == 'cash' ? 'Tiền mặt' : 'Thẻ ngân hàng'}
                 </Typography>

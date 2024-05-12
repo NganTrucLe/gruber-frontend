@@ -45,11 +45,10 @@ export const doPatch = async (url: string, request: any) => {
     },
     body: JSON.stringify(request),
   });
-  const { data, statusCode, message } = await response.json();
-  if (statusCode === StatusCode.SUCCESS) {
-    return data;
+  if (!response.ok) {
+    throw new Error('Có lỗi xảy ra khi thực hiện thao tác này');
   }
-  throw new Error(message);
+  return await response.json();
 };
 
 export const doDelete = async (url: string) => {

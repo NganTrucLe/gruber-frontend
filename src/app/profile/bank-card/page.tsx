@@ -77,14 +77,18 @@ export default function BankCardPage() {
     const bank = banks.filter((bank: { short_name: string }) => bank.short_name === card.bankName)[0];
     return (
       <>
-        <Typography variant='body2'>{(bank as unknown as { name: string })?.name}</Typography>
-        <Image
-          alt='bank logo'
-          src={(bank as unknown as { logo: string })?.logo}
-          width={100}
-          height={50}
-          placeholder='empty'
-        />
+        <Typography variant='body2' fontWeight='bold' gutterBottom>
+          {(bank as unknown as { name: string })?.name}
+        </Typography>
+        <div style={{ width: '250px', height: '100px', position: 'relative' }}>
+          <Image
+            alt='bank logo'
+            fill
+            style={{ objectFit: 'cover' }}
+            src={(bank as unknown as { logo: string })?.logo}
+            placeholder='empty'
+          />
+        </div>
       </>
     );
   }
@@ -105,9 +109,13 @@ export default function BankCardPage() {
               mb: 2,
             }}>
             <BankInfo />
-            <Typography variant='body2'>{card.cardAccountNumber}</Typography>
-            <Typography variant='body2'>{card.cardAccountName}</Typography>
-            <Typography variant='body2'>{card.cardExpiredDate}</Typography>
+            <Typography variant='body1' gutterBottom>
+              {card.cardAccountNumber}
+            </Typography>
+            <Typography variant='body1' gutterBottom>
+              {card.cardAccountName}
+            </Typography>
+            <Typography variant='body1'>{card.cardExpiredDate}</Typography>
           </Card>
           <LoadingButton
             color='error'

@@ -25,7 +25,7 @@ export default function SelectVehicle(props: SelectVehicleProps) {
   const { distance, onSelectVehicle, selected } = props;
   const { data: price, status } = useQuery({
     queryKey: ['price', distance],
-    queryFn: () => getVehiclePrice(Math.round(distance)),
+    queryFn: () => getVehiclePrice(distance),
   });
 
   if (status === 'success') {
