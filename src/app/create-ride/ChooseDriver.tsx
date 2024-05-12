@@ -1,34 +1,24 @@
 'use client';
 import { Dispatch, SetStateAction } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { AdvancedMarker } from '@vis.gl/react-google-maps';
 
 import { Alert, Typography } from '@mui/material';
 
 import { ILocationRecord, IRideFromStaff } from '@/libs/interfaces';
+import { getOnlineDrivers } from '@/libs/query';
+import { formatVehicleType } from '@/libs/utils';
 
-const onlineDriver = [
-  {
-    id: 'd136f5a1-dbc7-476d-a28a-3bb4817c4022',
-    location: {
-      lat: 10.764622,
-      lng: 106.650172,
-    },
-  },
-  {
-    id: 'd136f5a1-dbc7-476d-a28a-3bb4817c4022',
-    location: {
-      lat: 10.704722,
-      lng: 106.64,
-    },
-  },
-  {
-    id: 'd136f5a1-dbc7-476d-a28a-3bb4817c4022',
-    location: {
-      lat: 10.674822,
-      lng: 106.652172,
-    },
-  },
-];
+interface OnlineDriver {
+  id: string;
+  name: string;
+  phone: string;
+  location: {
+    lat: number;
+    lng: number;
+  };
+}
+
 export default function ChooseDriver({
   pickupState,
   destinationState,
@@ -41,6 +31,10 @@ export default function ChooseDriver({
   const [pickup] = pickupState;
   const [destination] = destinationState;
   const [ride, setRide] = rideState;
+  const { data, status } = useQuery({
+    queryKey: ['onlineDrivers'],
+    queryFn: getOnlineDrivers,
+  });
   if (ride)
     return (
       <div>
@@ -62,16 +56,18 @@ export default function ChooseDriver({
         </Typography>
         <Typography>
           <b>Loại xe: </b>
-          {ride.vehicle_type}
+          {formatVehicleType(ride.vehicle_type)}
         </Typography>
-        {onlineDriver.map((driver) => (
-          <AdvancedMarker
-            key={driver.id}
-            position={driver.location}
-            onClick={() => setRide((prev) => (prev ? { ...prev, driver_id: driver.id } : null))}
-            title='Tài xế'
-          />
-        ))}
+        {status === 'success'
+          ? data.map((driver: OnlineDriver) => (
+              <AdvancedMarker
+                key={driver.id}
+                position={driver.location}
+                onClick={() => setRide((prev) => (prev ? { ...prev, driver_id: driver.id } : null))}
+                title='Tài xế'
+              />
+            ))
+          : null}
         {ride.driver_id ? (
           <Typography>
             <b>Mã tài xế: </b>

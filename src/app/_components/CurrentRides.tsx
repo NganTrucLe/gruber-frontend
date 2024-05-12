@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 
-import { currentBookingss } from '@/libs/query';
+import { currentBookings } from '@/libs/query';
 import { BookingStatus, VehicleType } from '@/libs/enum';
 
 const columns: GridColDef[] = [
@@ -78,7 +78,7 @@ const columns: GridColDef[] = [
 export default function CurrentRides() {
   const { data, status } = useQuery({
     queryKey: ['bookings'],
-    queryFn: currentBookingss,
+    queryFn: currentBookings,
   });
 
   if (status === 'error') return <div>Error</div>;

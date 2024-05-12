@@ -11,7 +11,7 @@ import Select from '@mui/material/Select';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 
-import { Vehicle } from '@/libs/enum';
+import { VehicleType } from '@/libs/enum';
 import { ILocationRecord, IRideFromStaff } from '@/libs/interfaces';
 import { searchLocations } from '@/libs/query';
 import { InputLayout } from '@/libs/ui';
@@ -151,7 +151,7 @@ export default function BasicInfoForm({
     message: 'Vui lòng chọn cả điểm đón và điểm trả khách',
   });
 
-  const handleSubmit = ({ name, phone, vehicle_type }: { name: string; phone: string; vehicle_type: Vehicle }) => {
+  const handleSubmit = ({ name, phone, vehicle_type }: { name: string; phone: string; vehicle_type: VehicleType }) => {
     if (pickup && destination) {
       const request = {
         name,
@@ -199,7 +199,7 @@ export default function BasicInfoForm({
         initialValues={{
           name: '',
           phone: '',
-          vehicle_type: 'motorbike' as Vehicle,
+          vehicle_type: 'motorbike' as VehicleType,
         }}
         validationSchema={RideFromStaffSchema}
         onSubmit={handleSubmit}>

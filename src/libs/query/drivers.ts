@@ -1,11 +1,23 @@
 import { WalletType } from '../enum';
 import { getStoredValue } from '../utils';
 import { doGet, doPatch, doPost } from './methods';
+import _ from 'lodash';
 
 export const getDrivers = async (): Promise<any> => {
-  // await sleep(500);
-  // return driversAll;
   return await doGet(`/users?role=driver`);
+};
+
+export const getOnlineDrivers = async (): Promise<any> => {
+  const data = await getDrivers();
+  return data.map((driver: any) => {
+    return {
+      ...driver,
+      location: {
+        lat: _.random(10.762, 10.7629, true),
+        lng: _.random(106.682, 106.6829, true),
+      },
+    };
+  });
 };
 
 export const getWalletsByDriverId = async () => {
