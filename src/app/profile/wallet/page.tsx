@@ -44,7 +44,7 @@ export default function WalletPage() {
             icon={<IncomeIcon />}
             sx={{ width: '10rem' }}
             LinkComponent={Link}
-            href='/income'
+            href='/profile/income'
           />
           <Tab
             label='Ví'

@@ -2,6 +2,7 @@
 import { BarChart } from '@mui/x-charts/BarChart';
 
 import { styled } from '@mui/material/styles';
+import Stack from '@mui/material/Stack';
 
 import CustomPieChart from './PieChart';
 
@@ -18,11 +19,23 @@ const Main = styled('main')(({ theme }) => ({
 }));
 
 function ChartsOverviewDemo() {
+  const timeData = [35.6, 44.7, 24.3, 34.4, 50.6, 60.9, 70.3]; // replace with actual data
+
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    return `${daysOfWeek[d.getDay()]}, ${d.getDate()}/${d.getMonth() + 1}`;
+  }).reverse();
+
   return (
     <BarChart
-      series={[{ data: [35, 44, 24, 34] }]}
-      height={290}
-      xAxis={[{ data: ['Q1', 'Q2', 'Q3', 'Q4'], scaleType: 'band' }]}
+      series={[{ data: timeData }]}
+      height={500}
+      width={500}
+      yAxis={[{ label: 'Tổng giá trị kinh doanh (triệu)' }]}
+      xAxis={[{ data: days, scaleType: 'band', label: '7 ngày gần nhất' }]}
       margin={{ top: 10, bottom: 30, left: 40, right: 10 }}
     />
   );
@@ -32,8 +45,10 @@ export default function HomeAdmin() {
   return (
     <Main>
       <AdminNavbar />
-      <ChartsOverviewDemo />
-      <CustomPieChart />
+      <Stack spacing={2} direction='row'>
+        <ChartsOverviewDemo />
+        <CustomPieChart />
+      </Stack>
     </Main>
   );
 }

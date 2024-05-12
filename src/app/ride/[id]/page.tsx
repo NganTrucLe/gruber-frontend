@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { APIProvider, Map } from '@vis.gl/react-google-maps';
@@ -17,7 +16,7 @@ import BackIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 
 import { roleState } from '@/recoils/atom';
 import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
-import { Role } from '@/libs/enum';
+import { Role, BookingStatus } from '@/libs/enum';
 import { LoadingButton, Marker } from '@/libs/ui';
 import { assignDriverToBooking, bookingDetail } from '@/libs/query';
 import { formatBookingStatus, formatPrice, formatVehicleType } from '@/libs/utils';
@@ -32,9 +31,6 @@ export default function RideDetailsPage({ params }: { params: { id: string } }) 
   const { apiKey, mapId } = useGoogleMapAPI();
   const router = useRouter();
   const position = useCurrentLocation();
-  if (role !== Role.STAFF) {
-    router.push('/');
-  }
   const { data, status } = useQuery({
     queryKey: ['bookings', params.id],
     queryFn: () => bookingDetail(params.id),
@@ -48,6 +44,10 @@ export default function RideDetailsPage({ params }: { params: { id: string } }) 
       setToast('error', error.message);
     },
   });
+  if (role !== Role.STAFF && role !== Role.ADMIN) {
+    router.push('/');
+    return null;
+  }
 
   return (
     <main>
@@ -77,7 +77,10 @@ export default function RideDetailsPage({ params }: { params: { id: string } }) 
             </Box>
             <Stack spacing={0} sx={{ width: '100%', flexGrow: 1, py: 2, pr: 2 }}>
               <Typography variant='h5' fontWeight='bold' gutterBottom>
-                <IconButton component={Link} href='/'>
+                <IconButton
+                  onClick={() => {
+                    router.back();
+                  }}>
                   <BackIcon />
                 </IconButton>
                 &emsp;Chi tiết cuốc xe
@@ -143,24 +146,28 @@ export default function RideDetailsPage({ params }: { params: { id: string } }) 
                     </>
                   ) : (
                     <>
-                      <br />
-                      <Typography textAlign='center' sx={{ color: 'text.secondary' }}>
-                        Chưa có tài xế, vui lòng chọn 1 tài xế trên bản đồ
-                      </Typography>
-                      <br />
-                      <ChooseDriver onSelectDriver={(id) => setDriver(id)} />
-                      {driver ? (
-                        <Typography gutterBottom>
-                          <b>Đã chọn tài xế:</b> {driver}
-                        </Typography>
+                      {data.status !== BookingStatus.COMPLETED && data.status !== BookingStatus.CANCELLED ? (
+                        <>
+                          <br />
+                          <Typography textAlign='center' sx={{ color: 'text.secondary' }}>
+                            Chưa có tài xế, vui lòng chọn 1 tài xế trên bản đồ
+                          </Typography>
+                          <br />
+                          <ChooseDriver onSelectDriver={(id) => setDriver(id)} />
+                          {driver ? (
+                            <Typography gutterBottom>
+                              <b>Đã chọn tài xế:</b> {driver}
+                            </Typography>
+                          ) : null}
+                          <LoadingButton
+                            loading={isPending}
+                            disabled={driver === null}
+                            onClick={() => mutate()}
+                            sx={{ width: 'fit-content', left: '50%', transform: 'translate(-50%,0)' }}>
+                            Gửi thông tin đến tài xế
+                          </LoadingButton>
+                        </>
                       ) : null}
-                      <LoadingButton
-                        loading={isPending}
-                        disabled={driver === null}
-                        onClick={() => mutate()}
-                        sx={{ width: 'fit-content', left: '50%', transform: 'translate(-50%,0)' }}>
-                        Gửi thông tin đến tài xế
-                      </LoadingButton>
                     </>
                   )}
                 </>
