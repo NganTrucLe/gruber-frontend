@@ -16,10 +16,10 @@ import MyLocationIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 
 import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
 import { BookingStatus } from '@/libs/enum';
-import { currentBookings, updateRideStatus } from '@/libs/query';
+import { currentBookingOfUser, updateRideStatus } from '@/libs/query';
 import { LoadingButton } from '@/libs/ui';
 import { Marker } from '@/libs/ui';
-import { formatPrice } from '@/libs/utils';
+import { formatPrice, formatVehicleType } from '@/libs/utils';
 import SuccessfulDialog from './SuccessfulDialog';
 
 const Main = styled('main')({
@@ -92,14 +92,13 @@ export default function RidePage() {
   const position = useCurrentLocation();
   const router = useRouter();
   const { apiKey, mapId } = useGoogleMapAPI();
-  const [toPickup] = useState(true);
   const {
     data: booking,
     status,
     refetch,
   } = useQuery({
     queryKey: ['current-ride'],
-    queryFn: currentBookings,
+    queryFn: currentBookingOfUser,
   });
 
   if (status == 'pending') {
@@ -147,8 +146,7 @@ export default function RidePage() {
               component={Stack}
               spacing={2}>
               <div>
-                {/* TODO: Calculate the distance between current location and the marker, then change the state */}
-                {toPickup ? (
+                {booking.status == BookingStatus.ACCEPTED ? (
                   <Typography color='primary' textAlign='center'>
                     1 - Điểm đón khách
                   </Typography>
@@ -157,7 +155,7 @@ export default function RidePage() {
                     2 - Điểm trả khách
                   </Typography>
                 )}
-                <Typography textAlign='center'>GrabBike</Typography>
+                <Typography textAlign='center'>{formatVehicleType(booking.vehicle_type)}</Typography>
               </div>
               <Divider />
               <div>
@@ -173,9 +171,6 @@ export default function RidePage() {
               <Divider />
               <Stack sx={{ width: '100%' }}>
                 <Stack direction='row' spacing={2}>
-                  {/* TODO: Calculate the distance between current location and the marker, 
-                      then change the color, variant state, as well as the content */}
-
                   <NextActionButton bookingId={booking.id} status={booking.status} onChangeStatus={() => refetch()} />
                   <Fab size='medium' sx={{ boxShadow: 0 }} color='primary'>
                     <PhoneIcon />

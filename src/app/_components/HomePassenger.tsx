@@ -22,7 +22,7 @@ import { useCurrentLocation, useGoogleMapAPI, useToast } from '@/hooks';
 import { PaymentMethod, Vehicle } from '@/libs/enum';
 import { bookARide } from '@/libs/query';
 import { Directions, LoadingButton, Marker } from '@/libs/ui';
-import { calculateDistance, formatDistance } from '@/libs/utils';
+import { calculateDistance, formatDistance, getStoredValue } from '@/libs/utils';
 import SearchGroup from './SearchGroup';
 import SelectMethodDialog from './SelectMethodDialog';
 import SelectVehicle from './SelectVehicle';
@@ -58,17 +58,17 @@ export default function HomePage() {
     }
   }, [pickup, destination]);
 
-  const userID = '8faaa15a-ec25-4290-8b96-966db09e4f73'; //get from local storage, driverID or userID or staffID
+  const userId = getStoredValue('user_id');
   useEffect(() => {
     socket?.on('connect', () => {
       console.log('Connected');
     });
-    socket?.on(`${userID}`, (data) => {
-      console.log(`${userID}`, data);
+    socket?.on(`${userId}`, (data) => {
+      console.log(`${userId}`, data);
     });
 
     return () => {
-      socket?.off(`${userID}`);
+      socket?.off(`${userId}`);
       socket?.off('connect');
     };
   }, []);

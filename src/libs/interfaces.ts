@@ -1,3 +1,5 @@
+import { VehicleType } from './enum';
+
 export interface ILocationRecord {
   id?: string;
   name?: string;
@@ -11,7 +13,7 @@ export interface ILocationRecord {
 export interface IRideFromStaff {
   name: string;
   phone: string;
-  vehicle_type: string;
+  vehicle_type: VehicleType;
   booking_route: {
     pick_up?: string;
     destination?: string;

@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -19,9 +19,12 @@ import { formatPrice } from '@/libs/utils';
 export default function SuccessfulDialog({ props, booking }: { props: DialogProps; booking: any }) {
   const router = useRouter();
   const toast = useToast();
+  const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
     mutationFn: () => updateRideStatus(booking.id, BookingStatus.COMPLETED),
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['current-ride'] });
+      queryClient.removeQueries({ queryKey: ['current-ride'] });
       router.push('/');
     },
     onError: (message) => {
