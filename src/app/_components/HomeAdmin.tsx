@@ -1,12 +1,13 @@
 'use client';
 import { BarChart } from '@mui/x-charts/BarChart';
 
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Stack from '@mui/material/Stack';
 
 import CustomPieChart from './PieChart';
 
 import { AdminNavbar } from './AdminNavbar';
+import { useMediaQuery } from '@mui/material';
 
 const Main = styled('main')(({ theme }) => ({
   margin: '0 5rem',
@@ -42,10 +43,12 @@ function ChartsOverviewDemo() {
 }
 
 export default function HomeAdmin() {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
   return (
     <Main>
       <AdminNavbar />
-      <Stack spacing={2} direction='row'>
+      <Stack spacing={2} direction={matches ? 'row' : 'column'}>
         <ChartsOverviewDemo />
         <CustomPieChart />
       </Stack>

@@ -37,7 +37,7 @@ export default function SuccessfulDialog({ props, booking }: { props: DialogProp
       <DialogTitle variant='body1'>Thanh toán cho {booking.name}</DialogTitle>
       <DialogContent sx={{ textAlign: 'center' }}>
         <DialogContentText>
-          {booking.paymentMethod == 'cash' ? (
+          {booking.payment_method == 'cash' ? (
             <CashIcon sx={{ width: '3rem', height: '3rem' }} />
           ) : (
             <CardIcon sx={{ width: '3rem', height: '3rem' }} />
@@ -49,7 +49,7 @@ export default function SuccessfulDialog({ props, booking }: { props: DialogProp
         </DialogContentText>
 
         <DialogContentText>
-          {booking.paymentMethod == 'cash' ? 'Thu tiền mặt trước khi xác nhận' : 'Không cần thu tiền mặt'}
+          {booking.payment_method == 'cash' ? 'Thu tiền mặt trước khi xác nhận' : 'Không cần thu tiền mặt'}
         </DialogContentText>
       </DialogContent>
       <DialogActions>
