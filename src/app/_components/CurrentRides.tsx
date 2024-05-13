@@ -7,7 +7,8 @@ import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 
 import { currentBookings } from '@/libs/query';
-import { BookingStatus, VehicleType } from '@/libs/enum';
+import { BookingStatus } from '@/libs/enum';
+import { formatVehicleType } from '@/libs/utils';
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Mã cuốc', width: 90 },
@@ -49,8 +50,7 @@ const columns: GridColDef[] = [
     field: 'vehicle_type',
     headerName: 'Loại xe',
     width: 110,
-    valueGetter: (value) =>
-      `${value == VehicleType.MOTORBIKE ? 'Xe máy' : value == VehicleType.CAR4 ? 'Xe 4 chỗ' : VehicleType.CAR7}`,
+    valueGetter: (value) => `${formatVehicleType(value)}`,
   },
   {
     field: 'booking_route',

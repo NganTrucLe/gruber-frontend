@@ -11,8 +11,8 @@ const data = [
 
 const sizing = {
   margin: { right: 5 },
-  width: 300,
-  height: 300,
+  width: 500,
+  height: 500,
   legend: { hidden: false },
 };
 const TOTAL = data.map((item) => item.value).reduce((a, b) => a + b, 0);
