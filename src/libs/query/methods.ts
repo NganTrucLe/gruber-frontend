@@ -48,7 +48,7 @@ export const doPatch = async (url: string, request: any) => {
   if (!response.ok) {
     throw new Error('Có lỗi xảy ra khi thực hiện thao tác này');
   }
-  return await response.json();
+  return response.json();
 };
 
 export const doDelete = async (url: string) => {

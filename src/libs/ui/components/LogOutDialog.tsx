@@ -16,7 +16,7 @@ export function LogOutDialog(props: DialogProps) {
   const handleLogOut = () => {
     localStorage.removeStoredValue('idToken');
     localStorage.removeStoredValue('localId');
-    router.push('/log-in');
+    router.push('/welcome');
   };
 
   return (

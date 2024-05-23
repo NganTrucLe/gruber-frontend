@@ -16,7 +16,6 @@ export default function Template({ children }: { children: React.ReactNode }) {
   const { mutate, isPending } = useMutation({
     mutationFn: verifyToken,
     onError: (error) => {
-      console.error(error);
       localStorage.removeStoredValue('idToken');
       localStorage.removeStoredValue('user_id');
       router.push('/welcome');
@@ -28,7 +27,7 @@ export default function Template({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const token = localStorage.getStoredValue('idToken');
-    mutate(token);
+    token && mutate(token);
   }, []);
 
   if (isPending) return <div>Loading...</div>;

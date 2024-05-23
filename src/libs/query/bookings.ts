@@ -40,7 +40,7 @@ export const bookARide = async (values: any) => {
     ...values,
     user_id: getStoredValue('user_id'),
   };
-  const response = await fetch(`${ENDPOINT}/bookings`, {
+  const response = await fetch(`${ENDPOINT}/bookings/passengers`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export const createARide = async (data: {
     ...data,
     user_id: getStoredValue('user_id'),
   };
-  const response = await fetch(`${ENDPOINT}/bookings`, {
+  const response = await fetch(`${ENDPOINT}/bookings/staffs`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

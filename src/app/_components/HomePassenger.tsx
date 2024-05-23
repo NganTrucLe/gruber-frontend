@@ -110,7 +110,6 @@ export default function HomePage() {
     };
     mutate(data);
   };
-
   return (
     <Main>
       {apiKey === undefined ? (
